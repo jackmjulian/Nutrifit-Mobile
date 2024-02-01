@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import bcrypt from 'bcryptjs';
 
 const weightSchema = new mongoose.Schema(
   {
@@ -29,6 +30,27 @@ const userSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
+// Method to compare entered password with the hashed password in the database
+// enteredPassword is the password entered by the user
+// this.password is the hashed password in the database
+userSchema.methods.matchPassword = async function (enteredPassword) {
+  return await bcrypt.compare(enteredPassword, this.password);
+};
+
+// Middleware to hash the password before saving the user to the database
+userSchema.pre('save', async function (next) {
+  // If the password is not modified, then don't hash the password
+  if (!this.isModified('password')) {
+    next();
+  }
+
+  // Generate a salt
+  const salt = await bcrypt.genSalt(10);
+
+  // Hash the entered password
+  this.password = await bcrypt.hash(this.password, salt);
+});
 
 const Weight = mongoose.model('weight', weightSchema);
 

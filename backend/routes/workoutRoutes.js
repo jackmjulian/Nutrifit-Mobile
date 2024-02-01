@@ -5,6 +5,8 @@ import {
   getWorkoutById,
 } from '../controllers/workoutController.js';
 
+// TODO: Add protect middleware to protect the route from unauthorized access
+
 // Route for all workouts
 router.route('/').get(getWorkouts);
 

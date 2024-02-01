@@ -2,6 +2,8 @@ import express from 'express';
 const router = express.Router();
 import { getFoods, getFoodById } from '../controllers/foodController.js';
 
+// TODO: Add protect middleware to protect the route from unauthorized access
+
 // Route: /api/foods
 
 // Route for all foods
