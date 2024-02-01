@@ -42,10 +42,10 @@ const workoutSchema = new mongoose.Schema(
   }
 );
 
-const Set =  mongoose.model('Set', setSchema);
+const Set = mongoose.model('Set', setSchema);
 
-const Exercise =  mongoose.model('Exercise', exerciseSchema);
+const Exercise = mongoose.model('Exercise', exerciseSchema);
 
-const Workout =  mongoose.model('Workout', workoutSchema);
+const Workout = mongoose.model('Workout', workoutSchema);
 
 export { Set, Exercise, Workout };
