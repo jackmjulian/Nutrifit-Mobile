@@ -1,0 +1,111 @@
+const foods = [
+  {
+    food_name: 'Grenade Peanut Nutter',
+    food_calories: 223,
+    food_protein: 21.0,
+    food_carbs: 15.4,
+    food_fat: 9.3,
+  },
+  {
+    food_name: 'Fudge Brownie Whey (40g)',
+    food_calories: 147,
+    food_protein: 30.0,
+    food_carbs: 2.0,
+    food_fat: 1.8,
+  },
+  {
+    food_name: 'Brioche Burger Bun',
+    food_calories: 164,
+    food_protein: 5.4,
+    food_carbs: 31.1,
+    food_fat: 1.6,
+  },
+  {
+    food_name: 'Bacon Medallions (2 Slices)',
+    food_calories: 126,
+    food_protein: 24.0,
+    food_carbs: 1.0,
+    food_fat: 2.6,
+  },
+  {
+    food_name: 'Fruit Bowl',
+    food_calories: 345,
+    food_protein: 20.2,
+    food_carbs: 35.8,
+    food_fat: 12.9,
+  },
+  {
+    food_name: 'Thick White Bread (2 Slices)',
+    food_calories: 240,
+    food_protein: 8.2,
+    food_carbs: 46.0,
+    food_fat: 4.4,
+  },
+  {
+    food_name: 'Large Egg',
+    food_calories: 78,
+    food_protein: 7.5,
+    food_carbs: 0.0,
+    food_fat: 5.4,
+  },
+  {
+    food_name: 'Simply Chicken Tenders (Pack)',
+    food_calories: 588,
+    food_protein: 49.6,
+    food_carbs: 36.8,
+    food_fat: 26.4,
+  },
+  {
+    food_name: 'Chocolate Orange Per4m (70g)',
+    food_calories: 262,
+    food_protein: 49.0,
+    food_carbs: 7.0,
+    food_fat: 4.2,
+  },
+  {
+    food_name: 'Ufit (500ml)',
+    food_calories: 295,
+
+    food_protein: 50.0,
+    food_carbs: 18.0,
+    food_fat: 1.5,
+  },
+  {
+    food_name: 'Arla Protein Yoghurt (Salted Caramel)',
+    food_calories: 154,
+    food_protein: 20.0,
+    food_carbs: 15.0,
+    food_fat: 0.6,
+  },
+  {
+    food_name: 'Reduced Fat Burger (Ocado)',
+    food_calories: 191,
+
+    food_protein: 22.0,
+    food_carbs: 2.9,
+    food_fat: 10.0,
+  },
+  {
+    food_name: 'Chicken Grills (Peri Peri)',
+    food_calories: 543,
+    food_protein: 91.5,
+    food_carbs: 14.6,
+    food_fat: 12.9,
+  },
+  {
+    food_name: 'Farmhouse Bread (2 Slices)',
+    food_calories: 198,
+    food_protein: 7.0,
+    food_carbs: 38.6,
+    food_fat: 1.0,
+  },
+  {
+    food_name: 'Skinny Sausages',
+    food_calories: 73,
+    food_protein: 10.4,
+    food_carbs: 4.0,
+    food_fat: 1.5,
+  },
+];
+
+export default foods;
