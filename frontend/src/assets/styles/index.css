@@ -1,4 +1,4 @@
-* {
+body {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
@@ -22,3 +22,19 @@
   display: block;
   margin: 0 auto; /* This centers the image horizontally */
 }
+
+.form-group-sign {
+  height: 8vh;
+  font-size: larger;
+}
+
+.sign-in-btn {
+  height: 8vh;
+  width: 100%;
+  font-size: larger;
+  text-align: left;
+}
+
+/* .popup-class .swal-popup {
+  background-color: white !important;
+} */

@@ -22,6 +22,8 @@ const loginUser = asyncHandler(async (req, res) => {
       name: user.name,
       email: user.email,
       isAdmin: user.isAdmin,
+      calorie_goal: user.calorie_goal,
+      weight: user.weight,
     });
   } else {
     res.status(401);
@@ -62,6 +64,8 @@ const registerUser = asyncHandler(async (req, res) => {
       name: user.name,
       email: user.email,
       isAdmin: user.isAdmin,
+      calorie_goal: user.calorie_goal,
+      weight: user.weight,
     });
   } else {
     res.status(400);
