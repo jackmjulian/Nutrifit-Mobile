@@ -1,3 +1,6 @@
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import Background from '../assets/images/main-screen-max.jpg';
 import Logo from '../assets/images/logo-welcome-screen.svg';
 import { Container } from 'react-bootstrap';
@@ -5,6 +8,16 @@ import { Link } from 'react-router-dom';
 import Footer from '../components/Footer';
 
 const WelcomeScreen = () => {
+  const { userInfo } = useSelector((state) => state.auth);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (userInfo) {
+      navigate('/dashboard');
+    }
+  }, [userInfo, navigate]);
+
   const backgroundStyle = {
     backgroundImage: `url(${Background})`,
     backgroundSize: 'cover',
@@ -34,7 +47,10 @@ const WelcomeScreen = () => {
             <h1 className='bg-none'>Sign In</h1>
           </Link>
           <h1 className='bg-none'>|</h1>
-          <Link to='/register' className='text-decoration-none bg-none text-white'>
+          <Link
+            to='/register'
+            className='text-decoration-none bg-none text-white'
+          >
             <h1 className='bg-none'>Sign Up</h1>
           </Link>
         </Container>

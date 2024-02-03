@@ -7,7 +7,7 @@ import Loader from '../components/Loader';
 import { useLoginMutation } from '../slices/usersApiSlice';
 import { setCredentials } from '../slices/authSlice';
 import { FaArrowRight } from 'react-icons/fa';
-import { toast } from 'react-toastify';
+// import { toast } from 'react-toastify';
 import Swal from 'sweetalert2';
 
 const LoginScreen = () => {
