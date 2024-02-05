@@ -33,12 +33,15 @@ const DashboardBar = () => {
     <>
       <Navbar variant='dark' className='dashboard-nav'>
         <Container className='d-flex justify-content-evenly'>
-          <LinkContainer to='/dashboard'>
+          <LinkContainer
+            to='/dashboard'
+            onClick={() => console.log('userDashboard')}
+          >
             <Nav.Link>
               <RxDashboard size={30} />
             </Nav.Link>
           </LinkContainer>
-          <>
+          <div onClick={() => console.log('Dashboard Logo')}>
             <Nav className='d-flex align-items-center'>
               <img
                 src={Logo}
@@ -47,7 +50,7 @@ const DashboardBar = () => {
                 alt='React Bootstrap logo'
               />
             </Nav>
-          </>
+          </div>
           <LinkContainer to='/logout' onClick={logoutHandler}>
             <Nav.Link>
               <IoMdLogOut size={35} />
