@@ -1,5 +1,6 @@
 import { useSelector } from 'react-redux';
 import { Container, Row, Col } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 import DashboardBar from '../components/DashboardBar';
 import nutritionThumbnail from '../assets/images/nutrition-thumbnail.jpg';
 import fitnessThumbnail from '../assets/images/fitness-thumbnail.jpg';
@@ -50,23 +51,25 @@ const DashBoardScreen = () => {
       <Container>
         <Row style={thumbnailMain}>
           <Col xs={12} style={thumbnailContainer}>
-            <img
-              src={nutritionThumbnail}
-              alt='nutrition-thumbnail'
-              style={thumbnail}
-              className='fluid'
-              onClick={() => console.log('nutrition clicked')}
-            />
+            <Link to='/nutrition' className='text-center'>
+              <img
+                src={nutritionThumbnail}
+                alt='nutrition-thumbnail'
+                style={thumbnail}
+                className='fluid'
+              />
+            </Link>
             <h1 style={overlayText}>Nutrition</h1>
           </Col>
           <Col xs={12} style={thumbnailContainer}>
-            <img
-              src={fitnessThumbnail}
-              alt='fitness-thumbnail'
-              style={thumbnail}
-              className='fluid'
-              onClick={() => console.log('fitness clicked')}
-            />
+            <Link to='/fitness' className='text-center'>
+              <img
+                src={fitnessThumbnail}
+                alt='fitness-thumbnail'
+                style={thumbnail}
+                className='fluid'
+              />
+            </Link>
             <h1 style={overlayText1}>Fitness</h1>
           </Col>
         </Row>
