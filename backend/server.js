@@ -7,6 +7,8 @@ import connectDB from './config/db.js'; // Import database connection
 import { notFound, errorHandler } from './middleware/errorMiddleware.js'; // Import error middleware
 import foodRoutes from './routes/foodRoutes.js';
 import workoutRoutes from './routes/workoutRoutes.js';
+import exerciseRoutes from './routes/exerciseRoutes.js';
+import setRoutes from './routes/setRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import mealRoutes from './routes/mealRoutes.js';
 const port = process.env.PORT || 8000;
@@ -42,6 +44,12 @@ app.use('/api/meals', mealRoutes);
 
 // Route: /api/workouts
 app.use('/api/workouts', workoutRoutes);
+
+// Route: /api/exercises
+app.use('/api/exercises', exerciseRoutes);
+
+// Route: /api/sets
+app.use('/api/sets', setRoutes);
 
 // Route: /api/users
 app.use('/api/users', userRoutes);

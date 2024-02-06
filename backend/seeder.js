@@ -60,8 +60,8 @@ const importData = async () => {
       return {
         ...workout,
         user: adminUser,
-        exercises: sampleExercises,
-        sets: sampleSets,
+        workout_exercises: sampleExercises,
+        exercise_sets: sampleSets,
       };
     });
 

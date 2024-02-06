@@ -17,7 +17,7 @@ const exerciseSchema = new mongoose.Schema(
     exercise_type: { type: String, required: true },
     exercise_category: { type: String },
     exercise_description: { type: String },
-    sets: [setSchema],
+    exercise_sets: [setSchema],
   },
   {
     timestamps: true,
@@ -35,7 +35,7 @@ const workoutSchema = new mongoose.Schema(
     workout_name: { type: String, required: true },
     workout_category: { type: String },
     workout_description: { type: String },
-    exercises: [exerciseSchema],
+    workout_exercises: [exerciseSchema],
   },
   {
     timestamps: true,
