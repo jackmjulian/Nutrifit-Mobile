@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import colors from 'colors';
 import users from './data/users.js';
 import foods from './data/foods.js';
+import meals from './data/meals.js';
 import { workouts, exercises, sets } from './data/workouts.js';
 // import exercises from './data/workouts.js';
 // import sets from './data/workouts.js';
@@ -41,6 +42,10 @@ const importData = async () => {
       return { ...food, user: adminUser };
     });
 
+    const sampleMeals = meals.map((meal) => {
+      return { ...meal, user: adminUser };
+    });
+
     const sampleSets = sets.map((set) => {
       return { ...set, user: adminUser };
     });
@@ -61,6 +66,8 @@ const importData = async () => {
     });
 
     await Food.insertMany(sampleFoods);
+
+    await Meal.insertMany(sampleMeals);
 
     await Workout.insertMany(sampleWorkouts);
 

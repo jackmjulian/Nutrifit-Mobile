@@ -8,6 +8,7 @@ import { notFound, errorHandler } from './middleware/errorMiddleware.js'; // Imp
 import foodRoutes from './routes/foodRoutes.js';
 import workoutRoutes from './routes/workoutRoutes.js';
 import userRoutes from './routes/userRoutes.js';
+import mealRoutes from './routes/mealRoutes.js';
 const port = process.env.PORT || 8000;
 
 // Connect to database
@@ -35,6 +36,9 @@ app.get('/', (req, res) => {
 
 // Route: /api/foods
 app.use('/api/foods', foodRoutes);
+
+// Route: /api/meals
+app.use('/api/meals', mealRoutes);
 
 // Route: /api/workouts
 app.use('/api/workouts', workoutRoutes);

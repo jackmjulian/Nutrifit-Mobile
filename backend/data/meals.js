@@ -18,3 +18,5 @@ const meals = [
     meal_name: 'Snacks',
   },
 ];
+
+export default meals;

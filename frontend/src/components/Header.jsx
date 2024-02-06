@@ -6,15 +6,15 @@ const Header = () => {
   const navigate = useNavigate();
   const location = useLocation(); // get the current location
 
-  // console.log(location.pathname);
   const goBack = () => {
     navigate(-1); // Go back to the previous page
   };
 
   return (
     <div className='position-relative'>
-      {/* if location doesn't equal /dashboard then render the back button */}
-      {location.pathname !== '/dashboard' && (
+      {/* If location is not one of these paths, render the back button */}
+      {['/dashboard', '/login', '/register'].indexOf(location.pathname) ===
+        -1 && (
         <IoIosArrowBack
           style={{
             fontSize: '24px',
