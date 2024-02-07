@@ -67,7 +67,7 @@ const deleteSet = asyncHandler(async (req, res) => {
   const set = await Set.findById(req.params.id); // req.params.id is the id from the url
 
   if (set) {
-    await set.remove();
+    await set.deleteOne({ _id: req.params.id });
     res.status(200).json({ message: 'Resource removed' });
   } else {
     res.status(404);

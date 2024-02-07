@@ -99,7 +99,7 @@ const deleteExercise = asyncHandler(async (req, res) => {
   const exercise = await Exercise.findById(req.params.id); // req.params.id is the id from the url
 
   if (exercise) {
-    await exercise.remove();
+    await exercise.deleteOne({ _id: req.params.id });
     res.status(200).json({ message: 'Exercise removed' });
   } else {
     res.status(404);
@@ -113,5 +113,5 @@ export {
   createExercise,
   updateExercise,
   deleteExercise,
-  addSetToExercise
+  addSetToExercise,
 };

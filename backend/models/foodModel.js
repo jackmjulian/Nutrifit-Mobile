@@ -29,6 +29,7 @@ const mealSchema = new mongoose.Schema(
       index: true,
     },
     meal_name: { type: String, required: true },
+    meal_image: { type: String, required: true },
     meal_foods: [foodSchema],
   },
   {

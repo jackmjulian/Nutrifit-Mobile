@@ -77,7 +77,7 @@ const deleteFood = asyncHandler(async (req, res) => {
   const food = await Food.findById(req.params.id); // req.params.id is the id from the url
 
   if (food) {
-    await food.remove();
+    await food.deleteOne({ _id: req.params.id });
     res.json({ message: 'Food removed' });
   } else {
     res.status(404);

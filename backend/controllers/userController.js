@@ -148,6 +148,8 @@ const updateUserProfile = asyncHandler(async (req, res) => {
   }
 });
 
+// TODO: Implement the following user routes
+
 // @desc Get all users
 // @route GET /api/users
 // @access Private/Admin

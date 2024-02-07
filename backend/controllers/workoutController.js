@@ -85,7 +85,7 @@ const deleteWorkout = asyncHandler(async (req, res) => {
   const workout = await Workout.findById(req.params.id); // req.params.id is the id from the url
 
   if (workout) {
-    await workout.remove();
+    await workout.deleteOne({ _id: req.params.id });
     res.status(200).json({ message: 'Workout removed' });
   } else {
     res.status(404);

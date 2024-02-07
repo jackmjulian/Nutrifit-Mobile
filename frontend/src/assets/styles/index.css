@@ -48,3 +48,15 @@ body {
 .dashboard-nav .nav-link {
   font-size: 20px;
 }
+
+/*  -----------------  Nutrition Screen  ---------------------- */
+.nutrition-card {
+  width: 90vw;
+  /* height: '30rem'; */
+}
+
+.nutrition-overlay-text {
+  color: white;
+  /* Add text shadow for better contrast */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+}

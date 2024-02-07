@@ -81,7 +81,7 @@ const deleteMeal = asyncHandler(async (req, res) => {
   const meal = await Meal.findById(req.params.id); // req.params.id is the id from the url
 
   if (meal) {
-    await meal.remove();
+    await meal.deleteOne({ _id: req.params.id });
     res.status(200).json({ message: 'Meal removed' });
   } else {
     res.status(404);
