@@ -46,7 +46,9 @@ const addFoodToMeal = asyncHandler(async (req, res) => {
   const foodId = req.body.food_id;
   if (meal) {
     const food = await Food.findById(foodId);
-    meal.meal_foods.push(food);
+    // meal.meal_foods.push(food);
+    const addedAt = new Date();
+    meal.meal_foods.push({ ...food.toObject(), addedAt }); // Adding food with addedAt field to current time
     const updatedMeal = await meal.save();
     res.status(200).json(updatedMeal);
   } else {

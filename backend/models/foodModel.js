@@ -14,6 +14,7 @@ const foodSchema = new mongoose.Schema(
     food_protein: { type: Number, required: true },
     food_carbs: { type: Number, required: true },
     food_fat: { type: Number, required: true },
+    addedAt: { type: Date }, // Define addedAt without default value so we can set it when adding to the meal
   },
   {
     timestamps: true,

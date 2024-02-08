@@ -46,7 +46,7 @@ const RegisterScreen = () => {
       <Form onSubmit={submitHandler}>
         <Form.Group controlId='name' className='mt-4'>
           <Form.Control
-            className='form-group-sign'
+            className='form-group-sign bg-dark text-light'
             type='text'
             placeholder='Name'
             value={name}
@@ -55,7 +55,7 @@ const RegisterScreen = () => {
         </Form.Group>
         <Form.Group controlId='email' className='mt-4'>
           <Form.Control
-            className='form-group-sign'
+            className='form-group-sign bg-dark text-light'
             type='email'
             placeholder='Email'
             value={email}
@@ -66,7 +66,7 @@ const RegisterScreen = () => {
         <Form.Group controlId='password' className='mt-4'>
           {/* onChange is used to update the state as the user types */}
           <Form.Control
-            className='form-group-sign'
+            className='form-group-sign bg-dark text-light'
             type='password'
             placeholder='Password'
             value={password}
@@ -76,7 +76,7 @@ const RegisterScreen = () => {
         <Form.Group controlId='confirmPassword' className='mt-4'>
           {/* onChange is used to update the state as the user types */}
           <Form.Control
-            className='form-group-sign'
+            className='form-group-sign bg-dark text-light'
             type='password'
             placeholder='Confirm password'
             value={confirmPassword}

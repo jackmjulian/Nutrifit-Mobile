@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Carousel, Card, Button, Container, Row, Col } from 'react-bootstrap';
 import { useGetMealsQuery } from '../slices/mealsApiSlice';
 import Loader from '../components/Loader';
@@ -9,6 +10,8 @@ const NutritionScreen = () => {
   const { data: meals, isLoading, isError } = useGetMealsQuery();
   console.log('nutrition screen', meals, isLoading, isError);
   const [imagesReady, setImagesReady] = useState(false);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     preloadImages();
@@ -24,7 +27,9 @@ const NutritionScreen = () => {
   };
 
   const handleAddFood = (mealId) => {
-    console.log('Add Food Clicked', mealId);
+    // console.log('Add Food Clicked', mealId);
+
+    navigate(`/nutrition/${mealId}`);
   };
 
   return (
@@ -36,21 +41,27 @@ const NutritionScreen = () => {
           {isError?.data?.message || isError.error}
         </Message>
       ) : (
-        <Carousel>
+        <Carousel interval={null}>
           {meals.map((meal) => (
             <Carousel.Item key={meal._id}>
               <Card className='nutrition-card bg-none text-white '>
                 <Card.Img variant='top' src={breakfastCard} />
                 <Card.Body className='bg-none'>
                   <h1 className='nutrition-overlay-text'>{meal.meal_name}</h1>
-                  {/* {meal.foodItems.map((foodItem, idx) => (
-                    <Row key={idx}>
-                      <Col xs={8}>{foodItem.name}</Col>
-                      <Col xs={4} className='text-end'>
-                        {foodItem.calories}cal
-                      </Col>
-                    </Row>
-                  ))} */}
+
+                  {/* Map through each of the added foods */}
+                  {meal.meal_foods && meal.meal_foods.length > 0 ? (
+                    meal.meal_foods.map((meal_food, idx) => (
+                      <Row key={idx}>
+                        <Col xs={8}>{meal_food.food_name}</Col>
+                        <Col xs={4} className='text-end'>
+                          {meal_food.food_calories}cal
+                        </Col>
+                      </Row>
+                    ))
+                  ) : (
+                    <p>No food added today</p>
+                  )}
                   <Button
                     variant='success'
                     className='mt-1 mb-4'

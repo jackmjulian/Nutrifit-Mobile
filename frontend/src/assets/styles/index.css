@@ -28,6 +28,10 @@ body {
   font-size: larger;
 }
 
+.form-group-sign::placeholder {
+  color: lightgrey;
+}
+
 .sign-in-btn {
   height: 8vh;
   width: 100%;
