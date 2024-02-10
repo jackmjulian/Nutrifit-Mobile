@@ -1,10 +1,34 @@
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
+import { useAddFoodToMealMutation } from '../slices/mealsApiSlice';
+import { useSelector } from 'react-redux';
 
-function FoodModal({ show, onHide, food }) {
+function FoodModal({ show, onHide, food, meal }) {
+  const [addFoodToMeal] = useAddFoodToMealMutation();
 
-  const handleAddFood = () => {
-    console.log('Add Food', food._id);
+  const token = useSelector((state) => state.auth); // Get token from Redux store or wherever it's stored
+  console.log('token:', token);
+
+  const handleAddFood = async () => {
+    try {
+      // Ensure both food and meal are present
+      if (food && meal) {
+        console.log('food:', food._id);
+        console.log('meal:', meal);
+        // Make an API call to add food to the meal
+        const response = await addFoodToMeal({
+          mealId: meal,
+          foodId: food._id,
+        });
+
+        // Handle success or error response here if necessary
+        console.log('Food added to meal:', response);
+      } else {
+        console.error('Food or meal not selected');
+      }
+    } catch (error) {
+      console.error('Error adding food to meal:', error);
+    }
   };
 
   //   if (food) {
@@ -20,7 +44,6 @@ function FoodModal({ show, onHide, food }) {
   //     const proteinPercentage = (foodProtein / totalPercentage) * 100;
   //   }
 
-
   return (
     <Modal show={show} onHide={onHide} size='xs' centered backdrop='static'>
       <Modal.Header className='bg-dark' closeVariant='white' closeButton>
@@ -28,9 +51,7 @@ function FoodModal({ show, onHide, food }) {
           {food ? food.food_name : 'No food selected'}
         </Modal.Title>
       </Modal.Header>
-      <Modal.Body className='bg-dark '>
-      insert bar here
-      </Modal.Body>
+      <Modal.Body className='bg-dark '>insert bar here</Modal.Body>
       <Modal.Footer className='bg-dark'>
         <Button variant='outline-success' type='submit' onClick={handleAddFood}>
           Add Food

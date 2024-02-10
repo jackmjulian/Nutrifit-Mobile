@@ -39,6 +39,11 @@ body {
   text-align: left;
 }
 
+.footer-link {
+  padding-bottom: 4vh;
+  color: white;
+}
+
 /* fix dashboard navbar to the bottom of the screen */
 
 .dashboard-nav {

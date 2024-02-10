@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { Container, Card, Col, Row } from 'react-bootstrap';
 import { useGetFoodsQuery } from '../slices/foodApiSlice';
 import Loader from '../components/Loader';
@@ -9,6 +10,10 @@ import FoodModal from '../components/FoodModal';
 const FoodScreen = () => {
   const { data: foods, isLoading, isError } = useGetFoodsQuery();
   // console.log('Food Page', foods);
+
+  // Get the search term from the URL
+  const { id: mealId } = useParams();
+  console.log(mealId);
 
   // Set search term and results state
   const [searchTerm, setSearchTerm] = useState('');
@@ -80,6 +85,7 @@ const FoodScreen = () => {
         show={modalShow}
         onHide={() => setModalShow(false)}
         food={selectedFood}
+        meal={mealId}
       />
     </Container>
   );

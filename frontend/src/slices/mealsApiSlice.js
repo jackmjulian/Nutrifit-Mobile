@@ -11,7 +11,14 @@ export const mealsApiSlice = apiSlice.injectEndpoints({
       }),
       keepUnusedDataFor: 5, // Keep unused data for 5 seconds
     }),
+    addFoodToMeal: builder.mutation({
+      query: ({ mealId, foodId }) => ({
+        url: `http://localhost:8000/api/meals/${mealId}/addfood`, // Concatenate mealId with the base URL
+        method: 'POST',
+        body: { foodId },
+      }),
+    }),
   }),
 });
 
-export const { useGetMealsQuery } = mealsApiSlice;
+export const { useGetMealsQuery, useAddFoodToMealMutation } = mealsApiSlice;
