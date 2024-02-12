@@ -1,5 +1,5 @@
 import express from 'express';
-import cors from 'cors';
+// import cors from 'cors';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 dotenv.config(); // Initialise dotenv to use .env files
@@ -29,7 +29,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 // CORS middleware
-app.use(cors());
+// app.use(cors());
 
 // Initial Route
 app.get('/', (req, res) => {

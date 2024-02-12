@@ -42,10 +42,12 @@ const createMeal = asyncHandler(async (req, res) => {
 // @route   POST /api/meals/:id/addfood
 // @access  Private
 const addFoodToMeal = asyncHandler(async (req, res) => {
+  console.log('Hello');
   const meal = await Meal.findById(req.params.id); // req.params.id is the id from the url
-  const foodId = req.body.food_id;
+  const foodId = req.body.foodId; // get the food id from the request
+  const food = await Food.findById(foodId);
+  console.log('food', food);
   if (meal) {
-    const food = await Food.findById(foodId);
     // meal.meal_foods.push(food);
     const addedAt = new Date();
     meal.meal_foods.push({ ...food.toObject(), addedAt }); // Adding food with addedAt field to current time

@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Container, Card, Col, Row } from 'react-bootstrap';
+import { Container, Card, Col, Row, Button } from 'react-bootstrap';
 import { useGetFoodsQuery } from '../slices/foodApiSlice';
 import Loader from '../components/Loader';
 import Message from '../components/Message';
 import SearchBar from '../components/SearchBar';
 import FoodModal from '../components/FoodModal';
+import CreateFoodModal from '../components/CreateFoodModal';
 
 const FoodScreen = () => {
   const { data: foods, isLoading, isError } = useGetFoodsQuery();
@@ -13,7 +14,7 @@ const FoodScreen = () => {
 
   // Get the search term from the URL
   const { id: mealId } = useParams();
-  console.log(mealId);
+  // console.log(mealId);
 
   // Set search term and results state
   const [searchTerm, setSearchTerm] = useState('');
@@ -21,6 +22,9 @@ const FoodScreen = () => {
 
   // Set modal show state
   const [modalShow, setModalShow] = useState(false);
+
+  // Additional state for the second create food modal
+  const [createFoodModalShow, setCreateFoodModalShow] = useState(false);
 
   // Set selected food for the modal to display
   const [selectedFood, setSelectedFood] = useState(null);
@@ -41,8 +45,13 @@ const FoodScreen = () => {
   // Handle modal click to display selected food
   const handleModalClick = (food) => {
     setModalShow(true);
-    console.log(food);
+    // console.log(food);
     setSelectedFood(food);
+  };
+
+  // Handle modal click to open create food modal
+  const handleCreateFoodModalClick = () => {
+    setCreateFoodModalShow(true);
   };
 
   // If there is a search term, display the search results, otherwise display all foods
@@ -53,9 +62,20 @@ const FoodScreen = () => {
       <h1 className='nutrition-overlay-text'>Add Food Below</h1>
       <Row>
         <Col>
+          {' '}
           <SearchBar onSearch={handleSearch} />
         </Col>
       </Row>
+      {/* Static card */}
+      <Card className='bg-dark text-light mb-2'>
+        <Button
+          variant='outline-success'
+          type='submit'
+          onClick={() => handleCreateFoodModalClick()}
+        >
+          Create New Food Item
+        </Button>
+      </Card>
       {isLoading ? (
         <Loader />
       ) : isError ? (
@@ -86,6 +106,10 @@ const FoodScreen = () => {
         onHide={() => setModalShow(false)}
         food={selectedFood}
         meal={mealId}
+      />
+      <CreateFoodModal
+        show={createFoodModalShow}
+        onHide={() => setCreateFoodModalShow(false)}
       />
     </Container>
   );

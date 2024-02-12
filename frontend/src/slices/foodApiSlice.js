@@ -11,7 +11,15 @@ export const foodsApiSlice = apiSlice.injectEndpoints({
       }),
       keepUnusedDataFor: 5, // Keep unused data for 5 seconds
     }),
+    createFoods: builder.mutation({
+      query: ({ food }) => ({
+        url: FOODS_URL,
+        method: 'POST',
+        body: food,
+      }),
+      invalidatesTags: ['Foods'],
+    }),
   }),
 });
 
-export const { useGetFoodsQuery } = foodsApiSlice;
+export const { useGetFoodsQuery, useCreateFoodsMutation } = foodsApiSlice;

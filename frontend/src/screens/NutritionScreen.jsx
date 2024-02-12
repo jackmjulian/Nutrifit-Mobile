@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import { Carousel, Card, Button, Container, Row, Col } from 'react-bootstrap';
 import { useGetMealsQuery } from '../slices/mealsApiSlice';
 import Loader from '../components/Loader';
@@ -8,8 +9,12 @@ import breakfastCard from '../assets/images/breakfast-card.jpg';
 
 const NutritionScreen = () => {
   const { data: meals, isLoading, isError } = useGetMealsQuery();
-  console.log('nutrition screen', meals, isLoading, isError);
+  // console.log('nutrition screen', meals, isLoading, isError);
   const [imagesReady, setImagesReady] = useState(false);
+
+  // Get the logged in user
+  const { userInfo } = useSelector((state) => state.auth);
+  // console.log('logged in user', userInfo._id);
 
   const navigate = useNavigate();
 

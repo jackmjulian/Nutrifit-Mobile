@@ -13,7 +13,7 @@ export const mealsApiSlice = apiSlice.injectEndpoints({
     }),
     addFoodToMeal: builder.mutation({
       query: ({ mealId, foodId }) => ({
-        url: `http://localhost:8000/api/meals/${mealId}/addfood`, // Concatenate mealId with the base URL
+        url: `${MEALS_URL}/${mealId}/addfood`, // Concatenate mealId with the base URL
         method: 'POST',
         body: { foodId },
       }),

@@ -1,20 +1,25 @@
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import { useAddFoodToMealMutation } from '../slices/mealsApiSlice';
-import { useSelector } from 'react-redux';
+import {
+  useAddFoodToMealMutation,
+  useGetMealsQuery,
+} from '../slices/mealsApiSlice';
 
 function FoodModal({ show, onHide, food, meal }) {
   const [addFoodToMeal] = useAddFoodToMealMutation();
 
-  const token = useSelector((state) => state.auth); // Get token from Redux store or wherever it's stored
-  console.log('token:', token);
+  // Get the refetch function for getting the meals again after a successful POST request
+  const { refetch: refetchMeals } = useGetMealsQuery();
+
+  // const token = useSelector((state) => state.auth); // Get token from Redux store or wherever it's stored
+  // console.log('token:', token);
 
   const handleAddFood = async () => {
     try {
       // Ensure both food and meal are present
       if (food && meal) {
-        console.log('food:', food._id);
-        console.log('meal:', meal);
+        // console.log('food id:', food._id);
+        // console.log('meal id:', meal);
         // Make an API call to add food to the meal
         const response = await addFoodToMeal({
           mealId: meal,
@@ -23,6 +28,12 @@ function FoodModal({ show, onHide, food, meal }) {
 
         // Handle success or error response here if necessary
         console.log('Food added to meal:', response);
+
+        // After successfully adding food, trigger a refetch of meal data
+        refetchMeals(); // This will refetch meal data from the server
+
+        // Close the modal after successfully adding food
+        onHide();
       } else {
         console.error('Food or meal not selected');
       }
