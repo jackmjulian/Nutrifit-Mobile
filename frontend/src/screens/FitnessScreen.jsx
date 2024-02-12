@@ -1,6 +1,4 @@
-const FitNessScreen = () => {
-  return (
-    <div>FitNessScreen</div>
-  )
-}
-export default FitNessScreen
+const FitnessScreen = () => {
+  return <div>FitnessScreen</div>;
+};
+export default FitnessScreen;

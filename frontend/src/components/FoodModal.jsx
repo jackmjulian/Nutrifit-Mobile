@@ -1,9 +1,11 @@
+import React from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import {
   useAddFoodToMealMutation,
   useGetMealsQuery,
 } from '../slices/mealsApiSlice';
+import PieChartWithCenterLabel from './FoodMacroChart';
 
 function FoodModal({ show, onHide, food, meal }) {
   const [addFoodToMeal] = useAddFoodToMealMutation();
@@ -42,18 +44,22 @@ function FoodModal({ show, onHide, food, meal }) {
     }
   };
 
-  //   if (food) {
-  //     // Convert the food nutrient values to floating-point numbers
-  //     const foodCarbs = parseFloat(food.food_carbs);
-  //     const foodProtein = parseFloat(food.food_protein);
-  //     const foodFat = parseFloat(food.food_fat);
+  let chartData = [];
+  if (food) {
+    // console.log(food);
+    // Calculate the percentages of protein, carbs, and fat
+    const total = food.food_protein + food.food_carbs + food.food_fat;
+    const proteinPercentage = (food.food_protein / total) * 100;
+    const carbsPercentage = (food.food_carbs / total) * 100;
+    const fatPercentage = (food.food_fat / total) * 100;
 
-  //     // Calculate the percentages
-  //     const totalPercentage = foodCarbs + foodFat + foodProtein;
-  //     const carbPercentage = (foodCarbs / totalPercentage) * 100;
-  //     const fatPercentage = (foodFat / totalPercentage) * 100;
-  //     const proteinPercentage = (foodProtein / totalPercentage) * 100;
-  //   }
+    // Prepare data for the PieChart
+    chartData = [
+      { value: proteinPercentage, label: 'Protein' },
+      { value: carbsPercentage, label: 'Carbs' },
+      { value: fatPercentage, label: 'Fat' },
+    ];
+  }
 
   return (
     <Modal show={show} onHide={onHide} size='xs' centered backdrop='static'>
@@ -62,7 +68,12 @@ function FoodModal({ show, onHide, food, meal }) {
           {food ? food.food_name : 'No food selected'}
         </Modal.Title>
       </Modal.Header>
-      <Modal.Body className='bg-dark '>insert bar here</Modal.Body>
+      <Modal.Body className='bg-dark '>
+        <PieChartWithCenterLabel
+          data={chartData}
+          label={food ? food.food_calories : 0}
+        />
+      </Modal.Body>
       <Modal.Footer className='bg-dark'>
         <Button variant='outline-success' type='submit' onClick={handleAddFood}>
           Add Food
