@@ -1,20 +1,45 @@
 import React from 'react';
+import { useState } from 'react';
+import { Col } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import {
   useAddFoodToMealMutation,
   useGetMealsQuery,
 } from '../slices/mealsApiSlice';
+import {
+  useDeleteFoodsMutation,
+  useGetFoodsQuery,
+} from '../slices/foodApiSlice';
 import PieChartWithCenterLabel from './FoodMacroChart';
+import { FaEdit } from 'react-icons/fa';
+import { MdDelete } from 'react-icons/md';
+
+// Import the edit food modal
+import EditFoodModal from './EditFoodModal';
 
 function FoodModal({ show, onHide, food, meal }) {
+  // Set the initial state for the edit food modal
+  const [editFoodModalShow, setEditFoodModalShow] = useState(false);
+
   const [addFoodToMeal] = useAddFoodToMealMutation();
 
   // Get the refetch function for getting the meals again after a successful POST request
   const { refetch: refetchMeals } = useGetMealsQuery();
 
+  // Get the refetch function for getting the foods again after a successful DELETE request
+  const { refetch: refetchFoods } = useGetFoodsQuery();
+
+  // Get the delete function from the useDeleteFoodMutation
+  const [deleteFoods] = useDeleteFoodsMutation();
+
   // const token = useSelector((state) => state.auth); // Get token from Redux store or wherever it's stored
   // console.log('token:', token);
+
+  // Handle modal click to display selected food
+  const handleEditModalClick = (food) => {
+    setEditFoodModalShow(true);
+  };
 
   const handleAddFood = async () => {
     try {
@@ -55,16 +80,39 @@ function FoodModal({ show, onHide, food, meal }) {
 
     // Prepare data for the PieChart
     chartData = [
-      { value: proteinPercentage, label: 'Protein' },
-      { value: carbsPercentage, label: 'Carbs' },
-      { value: fatPercentage, label: 'Fat' },
+      { value: proteinPercentage, label: `${food.food_protein}g Protein` },
+      { value: carbsPercentage, label: `${food.food_carbs}g Carbs` },
+      { value: fatPercentage, label: `${food.food_fat}g Fat` },
     ];
   }
+
+  const handleDeleteFood = async () => {
+    console.log('Delete food:', food._id);
+    try {
+      if (food) {
+        const response = await deleteFoods({ id: food._id });
+
+        console.log('Food deleted:', response);
+
+        // After successfully deleting food, trigger a refetch of food data
+        refetchFoods(); // This will refetch food data from the server
+
+        // Close the modal after successfully deleting food
+        onHide();
+      }
+    } catch (error) {
+      console.error('Error deleting food:', error);
+    }
+  };
 
   return (
     <Modal show={show} onHide={onHide} size='xs' centered backdrop='static'>
       <Modal.Header className='bg-dark' closeVariant='white' closeButton>
-        <Modal.Title id='contained-modal-title-vcenter'>
+        <Modal.Title className='d-flex'>
+          {/* <FaEdit />
+          <MdDelete /> */}
+        </Modal.Title>
+        <Modal.Title id='contained-modal-title-vcenter' className='m-2'>
           {food ? food.food_name : 'No food selected'}
         </Modal.Title>
       </Modal.Header>
@@ -75,10 +123,27 @@ function FoodModal({ show, onHide, food, meal }) {
         />
       </Modal.Body>
       <Modal.Footer className='bg-dark'>
-        <Button variant='outline-success' type='submit' onClick={handleAddFood}>
-          Add Food
-        </Button>
+        <Col xs={1} onClick={handleEditModalClick}>
+          <FaEdit />
+        </Col>
+        <Col xs={1} onClick={handleDeleteFood}>
+          <MdDelete />
+        </Col>
+        <Col xs={9} className='text-end'>
+          <Button
+            variant='outline-success'
+            type='submit'
+            onClick={handleAddFood}
+          >
+            Add Food
+          </Button>
+        </Col>
       </Modal.Footer>
+      <EditFoodModal
+        show={editFoodModalShow}
+        onHide={() => setEditFoodModalShow(false)}
+        food={food}
+      />
     </Modal>
   );
 }

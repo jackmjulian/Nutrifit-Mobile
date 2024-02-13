@@ -116,7 +116,6 @@ const deleteMeal = asyncHandler(async (req, res) => {
 // @route   DELETE /api/meals/:id/deletefood
 // @access  Private
 const deleteFoodFromMeal = asyncHandler(async (req, res) => {
-  console.log('hello');
   // req.params.id is the id from the url
   const meal = await Meal.findById(req.params.id);
 
