@@ -15,6 +15,12 @@ const foodSchema = new mongoose.Schema(
     food_carbs: { type: Number, required: true },
     food_fat: { type: Number, required: true },
     addedAt: { type: Date }, // Define addedAt without default value so we can set it when adding to the meal
+    // Add a unique identifier for each food instance
+    food_instance_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      unique: true,
+    },
   },
   {
     timestamps: true,

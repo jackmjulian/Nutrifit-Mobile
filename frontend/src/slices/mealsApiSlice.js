@@ -18,7 +18,18 @@ export const mealsApiSlice = apiSlice.injectEndpoints({
         body: { foodId },
       }),
     }),
+    deleteFoodFromMeal: builder.mutation({
+      query: ({ mealId, foodInstanceId }) => ({
+        url: `${MEALS_URL}/${mealId}/deletefood`, // Concatenate mealId with the base URL
+        method: 'DELETE',
+        body: { foodInstanceId },
+      }),
+    }),
   }),
 });
 
-export const { useGetMealsQuery, useAddFoodToMealMutation } = mealsApiSlice;
+export const {
+  useGetMealsQuery,
+  useAddFoodToMealMutation,
+  useDeleteFoodFromMealMutation,
+} = mealsApiSlice;

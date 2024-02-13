@@ -2,19 +2,27 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { Carousel, Card, Button, Container, Row, Col } from 'react-bootstrap';
-import { useGetMealsQuery } from '../slices/mealsApiSlice';
+import {
+  useGetMealsQuery,
+  useDeleteFoodFromMealMutation,
+} from '../slices/mealsApiSlice';
 import Loader from '../components/Loader';
 import Message from '../components/Message';
 import breakfastCard from '../assets/images/breakfast-card.jpg';
 
 const NutritionScreen = () => {
-  const { data: meals, isLoading, isError } = useGetMealsQuery();
-  // console.log('nutrition screen', meals, isLoading, isError);
+  const {
+    data: meals,
+    isLoading,
+    isError,
+    refetch: refetchMeals,
+  } = useGetMealsQuery();
+  const [deleteFoodFromMeal] = useDeleteFoodFromMealMutation();
+
   const [imagesReady, setImagesReady] = useState(false);
 
-  // Get the logged in user
+  // Get the logged in user - userInfo._id
   const { userInfo } = useSelector((state) => state.auth);
-  // console.log('logged in user', userInfo._id);
 
   const navigate = useNavigate();
 
@@ -33,8 +41,19 @@ const NutritionScreen = () => {
 
   const handleAddFood = (mealId) => {
     // console.log('Add Food Clicked', mealId);
-
     navigate(`/nutrition/${mealId}`);
+  };
+
+  const handleDeleteFood = async (mealId, foodInstanceId) => {
+    try {
+      console.log('Delete Food Clicked', mealId, foodInstanceId);
+      await deleteFoodFromMeal({ mealId, foodInstanceId });
+
+      // If the deletion is successful, refetch meals to update the UI
+      refetchMeals();
+    } catch (error) {
+      console.error('Error deleting food:', error.message);
+    }
   };
 
   return (
@@ -46,7 +65,8 @@ const NutritionScreen = () => {
           {isError?.data?.message || isError.error}
         </Message>
       ) : (
-        <Carousel interval={null}>
+        // Set controls to false to hide the carousel controls and allow the user to swipe through the carousel
+        <Carousel interval={null} controls={false}>
           {meals.map((meal) => (
             <Carousel.Item key={meal._id}>
               <Card className='nutrition-card bg-none text-white '>
@@ -54,16 +74,40 @@ const NutritionScreen = () => {
                 <Card.Body className='bg-none'>
                   <h1 className='nutrition-overlay-text'>{meal.meal_name}</h1>
 
-                  {/* Map through each of the added foods */}
-                  {meal.meal_foods && meal.meal_foods.length > 0 ? (
-                    meal.meal_foods.map((meal_food, idx) => (
-                      <Row key={idx}>
-                        <Col xs={8}>{meal_food.food_name}</Col>
-                        <Col xs={4} className='text-end'>
-                          {meal_food.food_calories}cal
-                        </Col>
-                      </Row>
-                    ))
+                  {/* Check if there are any food items for the current user */}
+                  {meal.meal_foods &&
+                  meal.meal_foods.some((food) => food.user === userInfo._id) ? (
+                    meal.meal_foods.map(
+                      (meal_food, idx) =>
+                        meal_food.user === userInfo._id && (
+                          <Row key={idx}>
+                            <Col xs={8}>{meal_food.food_name}</Col>
+                            <Col xs={3} className='text-end'>
+                              {meal_food.food_calories}cal
+                            </Col>
+                            <Col
+                              xs={1}
+                              className='text-center'
+                              // onClick={() =>
+                              //   console.log(
+                              //     meal_food.food_instance_id,
+                              //     'remove clicked food',
+                              //     meal._id,
+                              //     'meal id'
+                              //   )
+                              // }
+                              onClick={() =>
+                                handleDeleteFood(
+                                  meal._id,
+                                  meal_food.food_instance_id
+                                )
+                              }
+                            >
+                              x
+                            </Col>
+                          </Row>
+                        )
+                    )
                   ) : (
                     <p>No food added today</p>
                   )}

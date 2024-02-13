@@ -1,4 +1,5 @@
 import asyncHandler from '../middleware/asyncHandler.js';
+import mongoose from 'mongoose';
 import { Meal, Food } from '../models/foodModel.js';
 
 // @desc    Fetch all meals
@@ -45,18 +46,36 @@ const addFoodToMeal = asyncHandler(async (req, res) => {
   console.log('Hello');
   const meal = await Meal.findById(req.params.id); // req.params.id is the id from the url
   const foodId = req.body.foodId; // get the food id from the request
-  const food = await Food.findById(foodId);
-  console.log('food', food);
-  if (meal) {
-    // meal.meal_foods.push(food);
-    const addedAt = new Date();
-    meal.meal_foods.push({ ...food.toObject(), addedAt }); // Adding food with addedAt field to current time
-    const updatedMeal = await meal.save();
-    res.status(200).json(updatedMeal);
-  } else {
+  const foodInstance = await Food.findById(foodId);
+
+  // If the meal instance is not found, return a 404 error
+  if (!meal) {
     res.status(404);
-    throw new Error('Resource not found');
+    throw new Error('Meal not found');
   }
+
+  // If the food instance is not found, return a 404 error
+  if (!foodInstance) {
+    res.status(404);
+    throw new Error('Food not found');
+  }
+
+  // Generate a unique identifier for the food instance within the meal
+  // This is used for updating and deleting the food instance from the meal
+  const foodInstanceId = new mongoose.Types.ObjectId();
+
+  // Create a new food object with the additional field food_instance_id
+  const foodToAdd = {
+    ...foodInstance.toObject(),
+    addedAt: new Date(),
+    food_instance_id: foodInstanceId,
+  };
+
+  // Push the food instance to the meal
+  meal.meal_foods.push(foodToAdd);
+
+  const updatedMeal = await meal.save();
+  res.status(200).json(updatedMeal);
 });
 
 // @desc    Update a meal
@@ -97,16 +116,21 @@ const deleteMeal = asyncHandler(async (req, res) => {
 // @route   DELETE /api/meals/:id/deletefood
 // @access  Private
 const deleteFoodFromMeal = asyncHandler(async (req, res) => {
-  const meal = await Meal.findById(req.params.id); // req.params.id is the id from the url
-  const foodId = req.body.food_id;
+  console.log('hello');
+  // req.params.id is the id from the url
+  const meal = await Meal.findById(req.params.id);
+
+  // get the food id from the request
+  const foodInstanceId = req.body.foodInstanceId;
+  console.log('foodInstanceId', foodInstanceId);
+
   if (meal) {
-    // Convert the food IDs to strings for proper comparison
-    // In MongoDB, the _id is an ObjectId, so we need to convert it to a string
-    const filteredFoods = meal.meal_foods.filter(
-      (food) => food._id.toString() !== foodId.toString()
+    // Filter out the food instance with the matching food_instance_id
+    meal.meal_foods = meal.meal_foods.filter(
+      (food) => food.food_instance_id.toString() !== foodInstanceId
     );
+
     // Update the meal with the filtered foods
-    meal.meal_foods = filteredFoods;
     const updatedMeal = await meal.save();
     res.status(200).json(updatedMeal);
   } else {
