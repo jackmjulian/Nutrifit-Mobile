@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Button, Form } from 'react-bootstrap';
+import { Button, Col, Form, Row } from 'react-bootstrap';
 import Modal from 'react-bootstrap/Modal';
 import Loader from '../components/Loader';
 import {
@@ -117,21 +117,25 @@ function CreateFoodModal({ show, onHide }) {
               className='form-group-create-food bg-dark text-light mb-2'
             />
           </Form.Group>
-          <Button
-            variant='outline-success'
-            type='submit'
-            disabled={
-              isLoading ||
-              !formData.food_name ||
-              !formData.food_calories ||
-              !formData.food_protein ||
-              !formData.food_carbs ||
-              !formData.food_fat
-            }
-          >
-            Submit
-          </Button>
-          {isLoading && <Loader />}
+          <Row>
+            <Col xs={12} className='text-end'>
+              <Button
+                variant='outline-success'
+                type='submit'
+                disabled={
+                  isLoading ||
+                  !formData.food_name ||
+                  !formData.food_calories ||
+                  !formData.food_protein ||
+                  !formData.food_carbs ||
+                  !formData.food_fat
+                }
+              >
+                Submit
+              </Button>
+              {isLoading && <Loader />}
+            </Col>
+          </Row>
         </Form>
       </Modal.Body>
       <Modal.Footer className='bg-dark'></Modal.Footer>

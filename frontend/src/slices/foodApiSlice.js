@@ -26,6 +26,14 @@ export const foodsApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ['Foods'],
     }),
+    updateFoods: builder.mutation({
+      query: ({ id, food }) => ({
+        url: `${FOODS_URL}/${id}`,
+        method: 'PUT',
+        body: food,
+      }),
+      invalidatesTags: ['Foods'],
+    }),
   }),
 });
 
@@ -33,4 +41,5 @@ export const {
   useGetFoodsQuery,
   useCreateFoodsMutation,
   useDeleteFoodsMutation,
+  useUpdateFoodsMutation,
 } = foodsApiSlice;

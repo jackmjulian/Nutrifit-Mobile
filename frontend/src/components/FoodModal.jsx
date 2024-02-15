@@ -1,6 +1,6 @@
 import React from 'react';
-import { useState } from 'react';
-import { Col } from 'react-bootstrap';
+import { useState, useEffect } from 'react';
+import { Form, Col, Row } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import {
@@ -10,17 +10,19 @@ import {
 import {
   useDeleteFoodsMutation,
   useGetFoodsQuery,
+  useUpdateFoodsMutation,
 } from '../slices/foodApiSlice';
 import PieChartWithCenterLabel from './FoodMacroChart';
 import { FaEdit } from 'react-icons/fa';
 import { MdDelete } from 'react-icons/md';
+import Loader from './Loader';
 
-// Import the edit food modal
-import EditFoodModal from './EditFoodModal';
+function FoodModal({ show, onHide, food, meal, setSelectedFood }) {
+  // Set the Edit State
+  const [inEdit, setInEdit] = useState(false);
 
-function FoodModal({ show, onHide, food, meal }) {
-  // Set the initial state for the edit food modal
-  const [editFoodModalShow, setEditFoodModalShow] = useState(false);
+  // // Set the initial state for the edit food modal
+  // const [editFoodModalShow, setEditFoodModalShow] = useState(false);
 
   const [addFoodToMeal] = useAddFoodToMealMutation();
 
@@ -33,13 +35,8 @@ function FoodModal({ show, onHide, food, meal }) {
   // Get the delete function from the useDeleteFoodMutation
   const [deleteFoods] = useDeleteFoodsMutation();
 
-  // const token = useSelector((state) => state.auth); // Get token from Redux store or wherever it's stored
-  // console.log('token:', token);
-
-  // Handle modal click to display selected food
-  const handleEditModalClick = (food) => {
-    setEditFoodModalShow(true);
-  };
+  // Get the update function from the useUpdateFoodMutation
+  const [updateFoods, { isLoading }] = useUpdateFoodsMutation();
 
   const handleAddFood = async () => {
     try {
@@ -69,6 +66,7 @@ function FoodModal({ show, onHide, food, meal }) {
     }
   };
 
+  // Prepare data for the PieChart
   let chartData = [];
   if (food) {
     // console.log(food);
@@ -105,14 +103,65 @@ function FoodModal({ show, onHide, food, meal }) {
     }
   };
 
+  // Set the initial state for the form data
+  const [formData, setFormData] = useState({
+    food_name: '',
+    food_calories: '',
+    food_protein: '',
+    food_carbs: '',
+    food_fat: '',
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [name]: value,
+    }));
+  };
+
+  // Update the food data
+  const handleUpdate = async (e) => {
+    e.preventDefault();
+    try {
+      // Initialize an empty object to hold updated data
+      const updatedData = {};
+
+      // Check each field in the form data
+      Object.entries(formData).forEach(([key, value]) => {
+        // If the field is empty in the form data, fill it with the corresponding value from the food object
+        if (value === '' && food[key] !== undefined) {
+          updatedData[key] = food[key];
+        } else {
+          updatedData[key] = value;
+        }
+      });
+
+      // Call the updateFoods mutation with the id of the food item and the updatedData object
+      await updateFoods({ id: food._id, food: updatedData });
+
+      // After successfully updating food, trigger a refetch of food data
+      refetchFoods();
+
+      // Merge the updatedData with the existing food data to maintain unchanged fields
+      const updatedFood = { ...food, ...updatedData };
+
+      // Set the updated food data
+      setSelectedFood(updatedFood);
+
+      // Close the edit form after successfully updating food
+      setInEdit(false);
+    } catch (error) {
+      console.error('Error creating food:', error);
+    }
+  };
+
   return (
     <Modal show={show} onHide={onHide} size='xs' centered backdrop='static'>
       <Modal.Header className='bg-dark' closeVariant='white' closeButton>
-        <Modal.Title className='d-flex'>
-          {/* <FaEdit />
-          <MdDelete /> */}
-        </Modal.Title>
+        <Modal.Title className='d-flex'></Modal.Title>
         <Modal.Title id='contained-modal-title-vcenter' className='m-2'>
+          {/* {food ? food.food_name : 'No food selected'} */}
           {food ? food.food_name : 'No food selected'}
         </Modal.Title>
       </Modal.Header>
@@ -122,28 +171,111 @@ function FoodModal({ show, onHide, food, meal }) {
           label={food ? food.food_calories : 0}
         />
       </Modal.Body>
+
+      {/* Conditional render the edit form when the edit button is clicked */}
+
+      {inEdit && (
+        <Modal.Body className='bg-dark '>
+          <Form onSubmit={handleUpdate} className=' bg-dark text-light'>
+            <Form.Group controlId='foodName'>
+              <Form.Control
+                type='text'
+                name='food_name'
+                placeholder={food.food_name}
+                value={formData.food_name}
+                onChange={handleChange}
+                className='form-group-create-food bg-dark text-light mb-2'
+              />
+            </Form.Group>
+            <Form.Group controlId='foodCalories'>
+              <Form.Control
+                type='text'
+                name='food_calories'
+                placeholder={`${food.food_calories} Calories`}
+                value={formData.food_calories}
+                onChange={handleChange}
+                className='form-group-create-food bg-dark text-light mb-2'
+              />
+            </Form.Group>
+            <Form.Group controlId='foodProtein'>
+              <Form.Control
+                type='text'
+                name='food_protein'
+                placeholder={`${food.food_protein}g Protein`}
+                value={formData.food_protein}
+                onChange={handleChange}
+                className='form-group-create-food bg-dark text-light mb-2'
+              />
+            </Form.Group>
+            <Form.Group controlId='foodCarbs'>
+              <Form.Control
+                type='text'
+                name='food_carbs'
+                placeholder={`${food.food_carbs}g Carbs`}
+                value={formData.food_carbs}
+                onChange={handleChange}
+                className='form-group-create-food bg-dark text-light mb-2'
+              />
+            </Form.Group>
+            <Form.Group controlId='foodFat'>
+              <Form.Control
+                type='text'
+                name='food_fat'
+                placeholder={`${food.food_fat}g Fat`}
+                value={formData.food_fat}
+                onChange={handleChange}
+                className='form-group-create-food bg-dark text-light mb-2'
+              />
+            </Form.Group>
+            <Row>
+              <Col xs={12} className='text-end'></Col>
+            </Row>
+          </Form>
+        </Modal.Body>
+      )}
+      {/* End of form */}
+
       <Modal.Footer className='bg-dark'>
-        <Col xs={1} onClick={handleEditModalClick}>
+        <Col
+          xs={1}
+          // onClick={handleEditModalClick}
+          onClick={() => {
+            setInEdit(!inEdit); // Toggle edit mode
+          }}
+        >
           <FaEdit />
         </Col>
         <Col xs={1} onClick={handleDeleteFood}>
           <MdDelete />
         </Col>
-        <Col xs={9} className='text-end'>
-          <Button
-            variant='outline-success'
-            type='submit'
-            onClick={handleAddFood}
-          >
-            Add Food
-          </Button>
-        </Col>
+
+        {/* If in edit mode the Add Food button is hidden and Update is shown */}
+
+        {inEdit ? (
+          <Col xs={9} className='text-end'>
+            <Button
+              variant='outline-success'
+              type='submit'
+              onClick={handleUpdate} // Use handleUpdate function for the Update button
+              disabled={isLoading}
+            >
+              Update
+            </Button>
+            {isLoading && <Loader />}
+          </Col>
+        ) : (
+          <Col xs={9} className='text-end'>
+            <Button
+              variant='outline-success'
+              type='submit'
+              onClick={handleAddFood}
+            >
+              Add Food
+            </Button>
+            {isLoading && <Loader />}
+          </Col>
+        )}
       </Modal.Footer>
-      <EditFoodModal
-        show={editFoodModalShow}
-        onHide={() => setEditFoodModalShow(false)}
-        food={food}
-      />
     </Modal>
   );
 }

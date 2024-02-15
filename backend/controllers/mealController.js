@@ -43,7 +43,6 @@ const createMeal = asyncHandler(async (req, res) => {
 // @route   POST /api/meals/:id/addfood
 // @access  Private
 const addFoodToMeal = asyncHandler(async (req, res) => {
-  console.log('Hello');
   const meal = await Meal.findById(req.params.id); // req.params.id is the id from the url
   const foodId = req.body.foodId; // get the food id from the request
   const foodInstance = await Food.findById(foodId);
@@ -121,7 +120,6 @@ const deleteFoodFromMeal = asyncHandler(async (req, res) => {
 
   // get the food id from the request
   const foodInstanceId = req.body.foodInstanceId;
-  console.log('foodInstanceId', foodInstanceId);
 
   if (meal) {
     // Filter out the food instance with the matching food_instance_id

@@ -62,6 +62,12 @@ const updateFood = asyncHandler(async (req, res) => {
     food.food_carbs = food_carbs || food.food_carbs;
     food.food_fat = food_fat || food.food_fat;
 
+    // Check if food_instance_id exists, update it only if it's present
+    if ('food_instance_id' in food) {
+      food.food_instance_id =
+        req.body.food_instance_id || food.food_instance_id;
+    }
+
     const updatedFood = await food.save();
     res.status(200).json(updatedFood);
   } else {

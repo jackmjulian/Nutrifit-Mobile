@@ -18,7 +18,7 @@ const foodSchema = new mongoose.Schema(
     // Add a unique identifier for each food instance
     food_instance_id: {
       type: mongoose.Schema.Types.ObjectId,
-      required: true,
+      // required: true,
       unique: true,
     },
   },

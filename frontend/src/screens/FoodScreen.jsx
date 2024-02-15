@@ -44,15 +44,20 @@ const FoodScreen = () => {
 
   // Handle modal click to display selected food
   const handleModalClick = (food) => {
+    setSelectedFood(food);
     setModalShow(true);
     // console.log(food);
-    setSelectedFood(food);
   };
 
   // Handle modal click to open create food modal
   const handleCreateFoodModalClick = () => {
     setCreateFoodModalShow(true);
   };
+
+  // Callback function to update selected food when edited
+  // const updateSelectedFood = (updatedFood) => {
+  //   setSelectedFood(updatedFood);
+  // };
 
   // If there is a search term, display the search results, otherwise display all foods
   const foodsToDisplay = searchTerm ? searchResults : foods;
@@ -106,6 +111,7 @@ const FoodScreen = () => {
         onHide={() => setModalShow(false)}
         food={selectedFood}
         meal={mealId}
+        setSelectedFood={setSelectedFood} // Pass down the state to the modal
       />
       <CreateFoodModal
         show={createFoodModalShow}
