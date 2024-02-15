@@ -11,6 +11,14 @@ const getMeals = asyncHandler(async (req, res) => {
   //   res.send('get all meals');
 });
 
+// @desc    Fetch meals by user
+// @route   GET /api/meals/user
+// @access  Private
+const getMealsByUser = asyncHandler(async (req, res) => {
+  const meals = await Meal.find({ user: req.user._id });
+  res.status(200).json(meals);
+});
+
 // @desc    Fetch single meal
 // @route   GET /api/meals/:id
 // @access  Private
@@ -139,6 +147,7 @@ const deleteFoodFromMeal = asyncHandler(async (req, res) => {
 export {
   getMeals,
   getMealById,
+  getMealsByUser,
   createMeal,
   updateMeal,
   deleteMeal,

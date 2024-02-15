@@ -132,6 +132,12 @@ const updateUserProfile = asyncHandler(async (req, res) => {
       user.password = req.body.password;
     }
 
+    // Check if calorie_goal is sent in the request body
+    // If calorie_goal is sent, update the calorie_goal
+    if (req.body.calorie_goal) {
+      user.calorie_goal = req.body.calorie_goal;
+    }
+
     // Save the updated user data
     const updatedUser = await user.save();
 
@@ -141,6 +147,7 @@ const updateUserProfile = asyncHandler(async (req, res) => {
       name: updatedUser.name,
       email: updatedUser.email,
       isAdmin: updatedUser.isAdmin,
+      calorie_goal: updatedUser.calorie_goal,
     });
   } else {
     res.status(404);

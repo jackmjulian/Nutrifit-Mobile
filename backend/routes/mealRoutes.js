@@ -3,6 +3,7 @@ const router = express.Router();
 import {
   getMeals,
   getMealById,
+  getMealsByUser,
   createMeal,
   updateMeal,
   deleteMeal,
@@ -17,6 +18,9 @@ import { protect, admin } from '../middleware/authMiddleware.js';
 
 // Route for all meals & creating a new meal
 router.route('/').get(protect, getMeals).post(protect, createMeal);
+
+// Route for all meals by user
+router.route('/:userId').get(protect, getMealsByUser);
 
 // Route for a single meal using id, updating a meal, & deleting a meal
 router

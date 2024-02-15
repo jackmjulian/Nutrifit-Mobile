@@ -1,11 +1,13 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import { Form, Col, Row } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import {
   useAddFoodToMealMutation,
   useGetMealsQuery,
+  useGetMealsByUserQuery,
 } from '../slices/mealsApiSlice';
 import {
   useDeleteFoodsMutation,
@@ -16,18 +18,20 @@ import PieChartWithCenterLabel from './FoodMacroChart';
 import { FaEdit } from 'react-icons/fa';
 import { MdDelete } from 'react-icons/md';
 import Loader from './Loader';
+import DeleteItemPopUp from './DeleteItemPopUp';
+import AddItemPopUp from './AddItemPopUp';
 
 function FoodModal({ show, onHide, food, meal, setSelectedFood }) {
   // Set the Edit State
   const [inEdit, setInEdit] = useState(false);
 
-  // // Set the initial state for the edit food modal
-  // const [editFoodModalShow, setEditFoodModalShow] = useState(false);
+  // Get logged in user
+  const { userInfo } = useSelector((state) => state.auth);
 
   const [addFoodToMeal] = useAddFoodToMealMutation();
 
   // Get the refetch function for getting the meals again after a successful POST request
-  const { refetch: refetchMeals } = useGetMealsQuery();
+  const { refetch: refetchMeals } = useGetMealsByUserQuery(userInfo._id);
 
   // Get the refetch function for getting the foods again after a successful DELETE request
   const { refetch: refetchFoods } = useGetFoodsQuery();
@@ -39,31 +43,33 @@ function FoodModal({ show, onHide, food, meal, setSelectedFood }) {
   const [updateFoods, { isLoading }] = useUpdateFoodsMutation();
 
   const handleAddFood = async () => {
-    try {
-      // Ensure both food and meal are present
-      if (food && meal) {
-        // console.log('food id:', food._id);
-        // console.log('meal id:', meal);
-        // Make an API call to add food to the meal
-        const response = await addFoodToMeal({
-          mealId: meal,
-          foodId: food._id,
-        });
+    AddItemPopUp(async () => {
+      try {
+        // Ensure both food and meal are present
+        if (food && meal) {
+          // console.log('food id:', food._id);
+          // console.log('meal id:', meal);
+          // Make an API call to add food to the meal
+          const response = await addFoodToMeal({
+            mealId: meal,
+            foodId: food._id,
+          });
 
-        // Handle success or error response here if necessary
-        console.log('Food added to meal:', response);
+          // Handle success or error response here if necessary
+          console.log('Food added to meal:', response);
 
-        // After successfully adding food, trigger a refetch of meal data
-        refetchMeals(); // This will refetch meal data from the server
+          // After successfully adding food, trigger a refetch of meal data
+          refetchMeals(); // This will refetch meal data from the server
 
-        // Close the modal after successfully adding food
-        onHide();
-      } else {
-        console.error('Food or meal not selected');
+          // Close the modal after successfully adding food
+          onHide();
+        } else {
+          console.error('Food or meal not selected');
+        }
+      } catch (error) {
+        console.error('Error adding food to meal:', error);
       }
-    } catch (error) {
-      console.error('Error adding food to meal:', error);
-    }
+    });
   };
 
   // Prepare data for the PieChart
@@ -85,22 +91,23 @@ function FoodModal({ show, onHide, food, meal, setSelectedFood }) {
   }
 
   const handleDeleteFood = async () => {
-    console.log('Delete food:', food._id);
-    try {
-      if (food) {
-        const response = await deleteFoods({ id: food._id });
+    DeleteItemPopUp(async () => {
+      try {
+        if (food) {
+          const response = await deleteFoods({ id: food._id });
 
-        console.log('Food deleted:', response);
+          console.log('Food deleted:', response);
 
-        // After successfully deleting food, trigger a refetch of food data
-        refetchFoods(); // This will refetch food data from the server
+          // After successfully deleting food, trigger a refetch of food data
+          refetchFoods(); // This will refetch food data from the server
 
-        // Close the modal after successfully deleting food
-        onHide();
+          // Close the modal after successfully deleting food
+          onHide();
+        }
+      } catch (error) {
+        console.error('Error deleting food:', error);
       }
-    } catch (error) {
-      console.error('Error deleting food:', error);
-    }
+    });
   };
 
   // Set the initial state for the form data

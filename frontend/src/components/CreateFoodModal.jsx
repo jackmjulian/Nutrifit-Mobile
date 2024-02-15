@@ -6,6 +6,7 @@ import {
   useCreateFoodsMutation,
   useGetFoodsQuery,
 } from '../slices/foodApiSlice';
+import AddItemPopUp from './AddItemPopUp';
 
 function CreateFoodModal({ show, onHide }) {
   // Get the createFoods mutation
@@ -34,28 +35,30 @@ function CreateFoodModal({ show, onHide }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    try {
-      await createFoods({ food: formData }); // Call the createFoods mutation with formData
-      console.log('Food created successfully:', formData);
+    AddItemPopUp(async () => {
+      try {
+        await createFoods({ food: formData }); // Call the createFoods mutation with formData
+        console.log('Food created successfully:', formData);
 
-      // Reset form fields after successful submission
-      setFormData({
-        food_name: '',
-        food_calories: '',
-        food_protein: '',
-        food_carbs: '',
-        food_fat: '',
-      });
+        // Reset form fields after successful submission
+        setFormData({
+          food_name: '',
+          food_calories: '',
+          food_protein: '',
+          food_carbs: '',
+          food_fat: '',
+        });
 
-      // After successfully creating food, trigger a refetch of food data
-      refetchFoods(); // This will refetch food data from the server
+        // After successfully creating food, trigger a refetch of food data
+        refetchFoods(); // This will refetch food data from the server
 
-      // Close the modal after successfully creating food
-      onHide();
-    } catch (error) {
-      console.error('Error creating food:', error);
-      // Handle error, maybe display an error message to the user
-    }
+        // Close the modal after successfully creating food
+        onHide();
+      } catch (error) {
+        console.error('Error creating food:', error);
+        // Handle error, maybe display an error message to the user
+      }
+    });
   };
 
   return (
