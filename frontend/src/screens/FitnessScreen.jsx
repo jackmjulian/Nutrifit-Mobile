@@ -1,7 +1,11 @@
 import { useState } from 'react';
 import { Button, Card, Container, Form, Row } from 'react-bootstrap';
+import { useGetExercisesQuery } from '../slices/exerciseSlice';
 
 const FitnessScreen = () => {
+  // Use the useGetExercisesQuery hook to fetch exercises from the server.
+  const { data: exercisesData, error, isLoading } = useGetExercisesQuery();
+
   // Define the initial state for an exercise. Each exercise has a name and an array of sets.
   // Each set has properties for weight, reps, and notes, all initially set to an empty string.
   const initialExercise = {
@@ -80,22 +84,22 @@ const FitnessScreen = () => {
         // If the index doesn't match, return the exercise as is.
         index !== exerciseIndex
           ? exercise
-           // If the index does match, return a new object.
-          : setIndex === null
-          // If setIndex is null, update the exercise name. Otherwise, update the set at the specified index.
-          ? { ...exercise, [field]: event.target.value } // Update the exercise name when setIndex is null.
-          
+          : // If the index does match, return a new object.
+          setIndex === null
+          ? // If setIndex is null, update the exercise name. Otherwise, update the set at the specified index.
+            { ...exercise, [field]: event.target.value } // Update the exercise name when setIndex is null.
           : {
               // This new object has all the properties of the current exercise...
               ...exercise,
               // ...but with an updated sets property. The updated sets is an array that contains all the previous sets...
-              sets: exercise.sets.map((set, index) =>
-                // For each set, it checks if its index matches the setIndex.
-                index !== setIndex
-                  // If the index doesn't match, return the set as is.
-                  ? set
-                  // If the index does match, return a new object. This new object has all the properties of the current set...
-                  : { ...set, [field]: event.target.value } // ...but with an updated field property.
+              sets: exercise.sets.map(
+                (set, index) =>
+                  // For each set, it checks if its index matches the setIndex.
+                  index !== setIndex
+                    ? // If the index doesn't match, return the set as is.
+                      set
+                    : // If the index does match, return a new object. This new object has all the properties of the current set...
+                      { ...set, [field]: event.target.value } // ...but with an updated field property.
               ),
             }
       )
@@ -150,9 +154,13 @@ const FitnessScreen = () => {
                   )} // Use the helper function to handle changes in the field.
                 >
                   <option value=''>Select Exercise</option>
-                  <option value='Shoulder Press'>Shoulder Press</option>
-                  <option value='Lateral Raise'>Lateral Raise</option>
-                  {/* Add more options as needed */}
+                  {/* Map through each of the exercises in the database */}
+                  {exercisesData?.map((exercise) => (
+                    <option key={exercise._id} value='Shoulder Press'>
+                      {exercise.exercise_name}
+                    </option>
+                  ))}
+                  {/* End of exercise map */}
                 </Form.Control>
               </Form.Group>
             </Row>
