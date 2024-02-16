@@ -80,3 +80,24 @@ body {
 .form-group-create-food::placeholder {
   color: lightgrey;
 }
+
+/*  -----------------  Create Workout Page  ---------------------- */
+
+/* .form-group-create-workout {
+
+  font-size: larger;
+} */
+
+.form-group-create-workout::placeholder {
+  color: lightgrey;
+}
+
+.no-outline {
+  outline: none;
+  border: none;
+}
+
+.bottom-line {
+  border-bottom: 1px solid lightgrey;
+  border-radius: 0;
+}
