@@ -1,13 +1,15 @@
 import { useState } from 'react';
-import { Button, Card, Container, Form, Row } from 'react-bootstrap';
+import { Button, Card, Col, Container, Form, Row } from 'react-bootstrap';
 import SelectExerciseModal from '../components/SelectExerciseModal';
 import { useGetExercisesQuery } from '../slices/exerciseApiSlice';
-import { BsThreeDots } from 'react-icons/bs';
 
 const FitnessScreen = () => {
   // Set modal state
   // Set modal show state
   const [selectExerciseModalShow, setSelectExerciseModalShow] = useState(false);
+
+  // Selected exercise state for the modal
+  const [selectedExercise, setSelectedExercise] = useState(null);
 
   // Get the exercises from the API
   const { data: exerciseData, isLoading, isError } = useGetExercisesQuery();
@@ -39,7 +41,12 @@ const FitnessScreen = () => {
     // Log the workout as an object.
     console.log({
       workoutName,
-      exercises,
+      exercises: exercises.map((exercise) => ({
+        exercise_name:
+          exercise.exercise_name ||
+          (selectedExercise ? selectedExercise.exercise_name : ''),
+        sets: exercise.sets,
+      })),
     });
   };
 
@@ -113,25 +120,16 @@ const FitnessScreen = () => {
   };
 
   // Function to handle the selected exercise from the modal.
-  const handleSelectExercise = (exercise) => {
-    // Find the index of the exercise in the exercises array
-    const exerciseIndex = exercises.findIndex(
-      (ex) => ex.exercise_name === '' // Find the exercise with an empty name (placeholder)
+  const getSelectedExercise = (selectedExercise, exerciseIndex) => {
+    console.log(selectedExercise, exerciseIndex);
+    // Update the selected exercise state only for the specified index
+    setExercises((prevExercises) =>
+      prevExercises.map((exercise, index) =>
+        index !== exerciseIndex
+          ? exercise
+          : { ...exercise, exercise_name: selectedExercise.exercise_name }
+      )
     );
-
-    if (exerciseIndex !== -1) {
-      // If an exercise with an empty name is found, update its name with the selected exercise
-      setExercises((prevExercises) =>
-        prevExercises.map((ex, index) =>
-          index === exerciseIndex
-            ? { ...ex, exercise_name: exercise.exercise_name }
-            : ex
-        )
-      );
-    }
-
-    // Hide the modal
-    setSelectExerciseModalShow(false);
   };
 
   return (
@@ -182,15 +180,11 @@ const FitnessScreen = () => {
                     'exercise_name'
                   )} // Use the helper function to handle changes in the field.
                 >
-                  <option> Select Exercise </option>
-
-                  {/* Map through the current list of exercises */}
-                  {exerciseData &&
-                    exerciseData.map((exercise, index) => (
-                      <option key={index} value={exercise.exercise_name}>
-                        {exercise.exercise_name}
-                      </option>
-                    ))}
+                  <option>
+                    {exercise.exercise_name
+                      ? exercise.exercise_name
+                      : 'Select Exercise'}
+                  </option>
                 </Form.Control>
               </Form.Group>
             </Row>
@@ -208,18 +202,19 @@ const FitnessScreen = () => {
                     name={`weight`}
                     placeholder='Weight'
                     value={set.set_weight}
-                    className='form-group-create-workout bg-dark text-light no-outline'
+                    className='form-group-create-workout bg-dark text-light no-outline w-25'
                     onChange={handleFieldChange(
                       exerciseIndex,
                       setIndex,
                       'set_weight'
                     )} // Use the helper function to handle changes in the field.
                   />
+
                   <Form.Control
                     type='text'
                     name='reps'
                     placeholder='Reps'
-                    className='form-group-create-workout bg-dark text-light no-outline'
+                    className='form-group-create-workout bg-dark text-light no-outline w-25'
                     value={set.set_reps}
                     onChange={handleFieldChange(
                       exerciseIndex,
@@ -254,6 +249,17 @@ const FitnessScreen = () => {
                 Add Set
               </Button>
             </Form.Group>
+            {/* Modal to select the exercise */}
+            {/* TO BE IMPLEMENTED LATER */}
+            <SelectExerciseModal
+              show={selectExerciseModalShow}
+              onHide={() => setSelectExerciseModalShow(false)}
+              exerciseData={exerciseData}
+              // onSelectExercise={getSelectedExercise}
+              onSelectExercise={(exercise) =>
+                getSelectedExercise(exercise, exerciseIndex)
+              }
+            />
           </Card>
         ))}
         {/* End of exercise map */}
@@ -271,15 +277,6 @@ const FitnessScreen = () => {
           </Form.Group>
         </Card>
       </Form>
-
-      {/* Modal to select the exercise */}
-      {/* TO BE IMPLEMENTED LATER */}
-      {/* <SelectExerciseModal
-        show={selectExerciseModalShow}
-        onHide={() => setSelectExerciseModalShow(false)}
-        exerciseData={exerciseData}
-        onSelectExercise={handleSelectExercise}
-      /> */}
     </Container>
   );
 };

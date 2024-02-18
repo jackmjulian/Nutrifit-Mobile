@@ -3,7 +3,13 @@ import SearchBar from './SearchBar';
 import { Button, Modal, ListGroup, Row, Col } from 'react-bootstrap';
 import Loader from './Loader';
 
-function SelectExerciseModal({ show, onHide, exerciseData, onSelectExercise }) {
+function SelectExerciseModal({
+  show,
+  onHide,
+  exerciseData,
+  onSelectExercise,
+  exerciseIndex,
+}) {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState(null); // State to hold selected category
 
@@ -27,9 +33,10 @@ function SelectExerciseModal({ show, onHide, exerciseData, onSelectExercise }) {
   };
 
   // Function to handle exercise selection
-  const handleExerciseSelection = (exercise) => {
+  const handleExerciseSelection = (exercise, exerciseIndex) => {
     // Pass the selected exercise back to the parent container
-    onSelectExercise(exercise);
+    onSelectExercise(exercise, exerciseIndex);
+    // console.log(exercise);
     // Hide the modal
     onHide();
   };
@@ -40,7 +47,8 @@ function SelectExerciseModal({ show, onHide, exerciseData, onSelectExercise }) {
         <Modal.Title>Select Exercise</Modal.Title>
       </Modal.Header>
       <Modal.Body className='bg-dark'>
-        <SearchBar onSearch={setSearchQuery} />
+        {/* TODO: IMPLEMENT A FILTER BAR HERE */}
+        {/* <SearchBar onSearch={setSearchQuery} /> */}
         <p>Filter by category</p>
         <Row>
           {exerciseData ? (
