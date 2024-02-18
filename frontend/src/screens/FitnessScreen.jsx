@@ -1,10 +1,16 @@
 import { useState } from 'react';
 import { Button, Card, Container, Form, Row } from 'react-bootstrap';
-import { useGetExercisesQuery } from '../slices/exerciseSlice';
+import SelectExerciseModal from '../components/SelectExerciseModal';
+import { useGetExercisesQuery } from '../slices/exerciseApiSlice';
+import { BsThreeDots } from 'react-icons/bs';
 
 const FitnessScreen = () => {
-  // Use the useGetExercisesQuery hook to fetch exercises from the server.
-  const { data: exercisesData, error, isLoading } = useGetExercisesQuery();
+  // Set modal state
+  // Set modal show state
+  const [selectExerciseModalShow, setSelectExerciseModalShow] = useState(false);
+
+  // Get the exercises from the API
+  const { data: exerciseData, isLoading, isError } = useGetExercisesQuery();
 
   // Define the initial state for an exercise. Each exercise has a name and an array of sets.
   // Each set has properties for weight, reps, and notes, all initially set to an empty string.
@@ -106,6 +112,28 @@ const FitnessScreen = () => {
     );
   };
 
+  // Function to handle the selected exercise from the modal.
+  const handleSelectExercise = (exercise) => {
+    // Find the index of the exercise in the exercises array
+    const exerciseIndex = exercises.findIndex(
+      (ex) => ex.exercise_name === '' // Find the exercise with an empty name (placeholder)
+    );
+
+    if (exerciseIndex !== -1) {
+      // If an exercise with an empty name is found, update its name with the selected exercise
+      setExercises((prevExercises) =>
+        prevExercises.map((ex, index) =>
+          index === exerciseIndex
+            ? { ...ex, exercise_name: exercise.exercise_name }
+            : ex
+        )
+      );
+    }
+
+    // Hide the modal
+    setSelectExerciseModalShow(false);
+  };
+
   return (
     <Container className='bg-none text-light p-4'>
       <Form
@@ -141,11 +169,12 @@ const FitnessScreen = () => {
               <Form.Group
                 id='exerciseName'
                 className='d-flex align-items-center bottom-line'
+                onClick={() => setSelectExerciseModalShow(true)}
               >
                 <Form.Control
                   as='select'
                   name={`exerciseName`}
-                  value={exercise.exercise_name}
+                  value={exercise.exercise_name || ''} // Set the value to an empty string if exercise_name is falsy
                   className='form-group-create-workout bg-dark text-light no-outline'
                   onChange={handleFieldChange(
                     exerciseIndex,
@@ -153,14 +182,15 @@ const FitnessScreen = () => {
                     'exercise_name'
                   )} // Use the helper function to handle changes in the field.
                 >
-                  <option value=''>Select Exercise</option>
-                  {/* Map through each of the exercises in the database */}
-                  {exercisesData?.map((exercise) => (
-                    <option key={exercise._id} value='Shoulder Press'>
-                      {exercise.exercise_name}
-                    </option>
-                  ))}
-                  {/* End of exercise map */}
+                  <option> Select Exercise </option>
+
+                  {/* Map through the current list of exercises */}
+                  {exerciseData &&
+                    exerciseData.map((exercise, index) => (
+                      <option key={index} value={exercise.exercise_name}>
+                        {exercise.exercise_name}
+                      </option>
+                    ))}
                 </Form.Control>
               </Form.Group>
             </Row>
@@ -241,6 +271,15 @@ const FitnessScreen = () => {
           </Form.Group>
         </Card>
       </Form>
+
+      {/* Modal to select the exercise */}
+      {/* TO BE IMPLEMENTED LATER */}
+      {/* <SelectExerciseModal
+        show={selectExerciseModalShow}
+        onHide={() => setSelectExerciseModalShow(false)}
+        exerciseData={exerciseData}
+        onSelectExercise={handleSelectExercise}
+      /> */}
     </Container>
   );
 };
