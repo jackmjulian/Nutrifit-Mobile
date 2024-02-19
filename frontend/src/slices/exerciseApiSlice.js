@@ -19,8 +19,21 @@ export const exerciseApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ['Exercises'],
     }),
+    addSetToExercise: builder.mutation({
+      query: ({ exerciseId, set }) => ({
+        url: `${EXERCISES_URL}/${exerciseId}/addset`,
+        method: 'POST',
+        body: set,
+      }),
+      invalidatesTags: (result, error, { exerciseId }) => [
+        { type: 'Exercises', id: exerciseId },
+      ],
+    }),
   }),
 });
 
-export const { useGetExercisesQuery, useCreateExerciseMutation } =
-  exerciseApiSlice;
+export const {
+  useGetExercisesQuery,
+  useCreateExerciseMutation,
+  useAddSetToExerciseMutation,
+} = exerciseApiSlice;

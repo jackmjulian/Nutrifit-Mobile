@@ -4,3 +4,4 @@ export const FOODS_URL = '/api/foods';
 export const MEALS_URL = '/api/meals';
 export const WORKOUTS_URL = '/api/workouts';
 export const EXERCISES_URL = '/api/exercises';
+export const SETS_URL = '/api/sets';

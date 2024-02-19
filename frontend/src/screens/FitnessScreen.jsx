@@ -3,6 +3,14 @@ import { Button, Card, Col, Container, Form, Row } from 'react-bootstrap';
 import SelectExerciseModal from '../components/SelectExerciseModal';
 import { useGetExercisesQuery } from '../slices/exerciseApiSlice';
 import AddItemPopUp from '../components/AddItemPopUp';
+import Loader from '../components/Loader';
+import ButtonLoader from '../components/ButtonLoader';
+import {
+  useCreateWorkoutMutation,
+  useAddExerciseToWorkoutMutation,
+} from '../slices/workoutSlice';
+import { useAddSetToExerciseMutation } from '../slices/exerciseApiSlice';
+import { useCreateSetMutation } from '../slices/setApiSlice';
 
 const FitnessScreen = () => {
   // Set modal state
@@ -11,6 +19,21 @@ const FitnessScreen = () => {
 
   // Selected exercise state for the modal
   const [selectedExercise, setSelectedExercise] = useState(null);
+
+  // Get create workout mutation
+  const [createWorkout, { isLoading: isCreatingWorkout }] =
+    useCreateWorkoutMutation();
+
+  // Get add exercise to workout mutation
+  const [addExerciseToWorkout, { isLoading: isAddingExerciseToWorkout }] =
+    useAddExerciseToWorkoutMutation();
+
+  // Get add set to exercise mutation
+  const [addSetToExercise, { isLoading: isAddingSetToExercise }] =
+    useAddSetToExerciseMutation();
+
+  // Get create set mutation
+  const [createSet, { isLoading: isCreatingSet }] = useCreateSetMutation();
 
   // Get the exercises from the API
   const {
@@ -23,7 +46,8 @@ const FitnessScreen = () => {
   // Define the initial state for an exercise. Each exercise has a name and an array of sets.
   // Each set has properties for weight, reps, and notes, all initially set to an empty string.
   const initialExercise = {
-    exercise_name: '',
+    // exercise_name: '',
+    exercise: { _id: '', exercise_name: '' },
     sets: [
       {
         set_weight: '',
@@ -40,26 +64,140 @@ const FitnessScreen = () => {
   const [workoutName, setWorkoutName] = useState('');
 
   // Define a function to handle form submission.
-  const submitWorkoutHandler = (event) => {
-    // Prevent the default form submission behavior.
+  // const submitWorkoutHandler = (event) => {
+  //   // Prevent the default form submission behavior.
+  //   event.preventDefault();
+
+  //   // Call the AddItemPopUp component with the confirmation text and confirmCallback function.
+  //   AddItemPopUp({
+  //     title: 'Add Workout',
+  //     text: 'Are you sure you want to add this workout?',
+  //     confirmCallback: async () => {
+  //       try {
+
+  //         const createdWorkout = await createWorkout({
+  //           workout: { workout_name: workoutName },
+  //         });
+  //         console.log('Create Workout: ', createdWorkout);
+  //         // workout _id will be createdWorkout.data._id
+
+  //         // Add each exercise to the workout
+  //         exercises.forEach(async (exercise) => {
+  //           // Use selectedExercise if available, otherwise use exercise.exercise_name
+  //           console.log('selected Exercise', exercise.exercise_id);
+
+  //           const addedExercise = await addExerciseToWorkout({
+  //             workoutId: createdWorkout.data._id,
+  //             exercise: { exercise_id: exercise.exercise_id },
+  //           });
+  //           console.log('added exercise: ', addedExercise);
+
+  //           // Add each set to the exercise
+  //           exercise.sets.forEach(async (set) => {
+  //             console.log('set: ', set);
+  //             const createdSet = await createSet({
+  //               set: {
+  //                 set_weight: set.set_weight,
+  //                 set_reps: set.set_reps,
+  //                 set_notes: set.set_notes,
+  //               },
+  //             });
+  //             console.log('created set: ', createdSet);
+  //             const addedSet = await addSetToExercise({
+  //               exerciseId: exercise.exercise_id,
+  //               set: { set_id: createdSet.data._id },
+  //             });
+  //             console.log('added set: ', addedSet);
+  //           });
+  //         });
+  //       } catch (error) {
+  //         console.log(error);
+  //       }
+  //     },
+  //   });
+  // };
+  // const submitWorkoutHandler = async (event) => {
+  //   event.preventDefault();
+
+  //   AddItemPopUp({
+  //     title: 'Add Workout',
+  //     text: 'Are you sure you want to add this workout?',
+  //     confirmCallback: async () => {
+  //       try {
+  //         const createdWorkout = await createWorkout({
+  //           workout: { workout_name: workoutName },
+  //         });
+  //         // console.log('Create Workout: ', createdWorkout);
+
+  //         // Loop through exercises in the same order they are stored in the state
+  //         for (const exercise of exercises) {
+  //           // console.log('selected Exercise', exercise.exercise_id);
+
+  //           const addedExercise = await addExerciseToWorkout({
+  //             workoutId: createdWorkout.data._id,
+  //             exercise: { exercise_id: exercise.exercise_id },
+  //           });
+  //           // console.log('added exercise: ', addedExercise);
+
+  //           // Loop through sets in the same order they are stored in the state
+  //           for (const set of exercise.sets) {
+  //             // console.log('set: ', set);
+  //             const createdSet = await createSet({
+  //               set: {
+  //                 set_weight: set.set_weight,
+  //                 set_reps: set.set_reps,
+  //                 set_notes: set.set_notes,
+  //               },
+  //             });
+  //             // console.log('created set: ', createdSet);
+  //             const addedSet = await addSetToExercise({
+  //               exerciseId: exercise.exercise_id,
+  //               set: { set_id: createdSet.data._id },
+  //             });
+  //             // console.log('added set: ', addedSet);
+  //           }
+  //         }
+  //       } catch (error) {
+  //         console.log(error);
+  //       }
+  //     },
+  //   });
+  // };
+
+  const submitWorkoutHandler = async (event) => {
     event.preventDefault();
 
-    // Call the AddItemPopUp component with the confirmation text and confirmCallback function.
     AddItemPopUp({
       title: 'Add Workout',
       text: 'Are you sure you want to add this workout?',
       confirmCallback: async () => {
         try {
-          // Log the workout as an object.
-          console.log({
-            workoutName,
-            exercises: exercises.map((exercise) => ({
-              exercise_name:
-                exercise.exercise_name ||
-                (selectedExercise ? selectedExercise.exercise_name : ''),
-              sets: exercise.sets,
-            })),
+          const createdWorkout = await createWorkout({
+            workout: { workout_name: workoutName },
           });
+
+          for (const exercise of exercises) {
+            const addedExercise = await addExerciseToWorkout({
+              workoutId: createdWorkout.data._id,
+              exercise: { exercise_id: exercise.exercise_id },
+            });
+
+            for (const set of exercise.sets) {
+              const createdSet = await createSet({
+                set: {
+                  set_weight: set.set_weight,
+                  set_reps: set.set_reps,
+                  set_notes: set.set_notes,
+                },
+              });
+              // console.log('addedExercise: ', exercise.exercise_id);
+              await addSetToExercise({
+                exerciseId: exercise.exercise_id,
+                set: { set_id: createdSet.data._id },
+              });
+            }
+          }
+          console.log('complete');
         } catch (error) {
           console.log(error);
         }
@@ -144,7 +282,12 @@ const FitnessScreen = () => {
       prevExercises.map((exercise, index) =>
         index !== exerciseIndex
           ? exercise
-          : { ...exercise, exercise_name: selectedExercise.exercise_name }
+          : {
+              ...exercise,
+              exercise_name: selectedExercise.exercise_name,
+              exercise_id: selectedExercise._id,
+              // exercise: selectedExercise,
+            }
       )
     );
   };
@@ -171,7 +314,14 @@ const FitnessScreen = () => {
               className='no-outline'
               onClick={submitWorkoutHandler}
             >
-              Save
+              {isCreatingWorkout ||
+              isAddingExerciseToWorkout ||
+              isAddingSetToExercise ||
+              isCreatingSet ? (
+                <ButtonLoader />
+              ) : (
+                'Save'
+              )}
             </Button>
           </Form.Group>
         </Card>
