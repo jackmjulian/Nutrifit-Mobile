@@ -3,19 +3,23 @@ import SearchBar from './SearchBar';
 import { Button, Modal, ListGroup, Row, Col, Form } from 'react-bootstrap';
 import Loader from './Loader';
 import AddItemPopUp from './AddItemPopUp';
+import { useCreateExerciseMutation } from '../slices/exerciseApiSlice';
 
 function SelectExerciseModal({
   show,
   onHide,
   exerciseData,
   onSelectExercise,
-  exerciseIndex,
+  refetchExerciseData,
 }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState(null); // State to hold selected category
 
   // Set state for adding new exercise
   const [addExerciseMode, setAddExerciseMode] = useState(false);
+
+  // Get the createNewExercise mutation
+  const [createExercise, { isLoading }] = useCreateExerciseMutation();
 
   // Filter exerciseData based on searchQuery and selected category
   const filteredExercises = exerciseData
@@ -62,13 +66,19 @@ function SelectExerciseModal({
     // Prevent the default form submission behavior.
     e.preventDefault();
 
-    // Call the AddItemPopUp component with the confirmation text and confirmCallback function.
+    // Call the AddItemPopUp component to confirm user wants to complete the action
     AddItemPopUp({
       title: 'Add Exercise',
       text: 'Are you sure you want to add this exercise?',
       confirmCallback: async () => {
         try {
+          // Call the createExercise mutation with formData
+          await createExercise({ exercise: formData });
+
           console.log(formData);
+
+          // Refetch the exercise data to load new exercise
+          refetchExerciseData();
 
           // Close the form
           setAddExerciseMode(false);

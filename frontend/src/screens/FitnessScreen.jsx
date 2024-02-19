@@ -13,7 +13,12 @@ const FitnessScreen = () => {
   const [selectedExercise, setSelectedExercise] = useState(null);
 
   // Get the exercises from the API
-  const { data: exerciseData, isLoading, isError } = useGetExercisesQuery();
+  const {
+    data: exerciseData,
+    refetch: refetchExerciseData,
+    isLoading,
+    isError,
+  } = useGetExercisesQuery();
 
   // Define the initial state for an exercise. Each exercise has a name and an array of sets.
   // Each set has properties for weight, reps, and notes, all initially set to an empty string.
@@ -271,6 +276,7 @@ const FitnessScreen = () => {
               onSelectExercise={(exercise) =>
                 getSelectedExercise(exercise, exerciseIndex)
               }
+              refetchExerciseData={refetchExerciseData}
             />
           </Card>
         ))}

@@ -11,7 +11,16 @@ export const exerciseApiSlice = apiSlice.injectEndpoints({
       }),
       keepUnusedDataFor: 5, // Keep unused data for 5 seconds
     }),
+    createExercise: builder.mutation({
+      query: ({ exercise }) => ({
+        url: EXERCISES_URL,
+        method: 'POST',
+        body: exercise,
+      }),
+      invalidatesTags: ['Exercises'],
+    }),
   }),
 });
 
-export const { useGetExercisesQuery } = exerciseApiSlice;
+export const { useGetExercisesQuery, useCreateExerciseMutation } =
+  exerciseApiSlice;
