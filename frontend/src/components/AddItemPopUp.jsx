@@ -1,9 +1,9 @@
 import Swal from 'sweetalert2';
 
-const AddItemPopUp = async (confirmCallback) => {
+const AddItemPopUp = async ({ title, text, confirmCallback }) => {
   const result = await Swal.fire({
-    title: 'Add Item',
-    text: 'Are you sure you want to add this item?',
+    title: title || 'Add Item',
+    text: text || 'Are you sure you want to add this item?',
     icon: 'question',
     showCancelButton: true,
     confirmButtonColor: '#198754',

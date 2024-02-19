@@ -101,3 +101,7 @@ body {
   border-bottom: 1px solid lightgrey;
   border-radius: 0;
 }
+
+.smaller-text {
+  font-size: 0.7em; /* You can adjust the font size as needed */
+}

@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import SearchBar from './SearchBar';
-import { Button, Modal, ListGroup, Row, Col } from 'react-bootstrap';
+import { Button, Modal, ListGroup, Row, Col, Form } from 'react-bootstrap';
 import Loader from './Loader';
+import AddItemPopUp from './AddItemPopUp';
 
 function SelectExerciseModal({
   show,
@@ -12,6 +13,9 @@ function SelectExerciseModal({
 }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState(null); // State to hold selected category
+
+  // Set state for adding new exercise
+  const [addExerciseMode, setAddExerciseMode] = useState(false);
 
   // Filter exerciseData based on searchQuery and selected category
   const filteredExercises = exerciseData
@@ -39,6 +43,47 @@ function SelectExerciseModal({
     // console.log(exercise);
     // Hide the modal
     onHide();
+  };
+
+  // Set initial form data
+  const [formData, setFormData] = useState({
+    exercise_name: '',
+    exercise_type: '',
+    exercise_category: '',
+  });
+
+  // Handle form change
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  // Function to handle adding new exercise
+  const handleAddExercise = async (e) => {
+    // Prevent the default form submission behavior.
+    e.preventDefault();
+
+    // Call the AddItemPopUp component with the confirmation text and confirmCallback function.
+    AddItemPopUp({
+      title: 'Add Exercise',
+      text: 'Are you sure you want to add this exercise?',
+      confirmCallback: async () => {
+        try {
+          console.log(formData);
+
+          // Close the form
+          setAddExerciseMode(false);
+
+          // Clear the form
+          setFormData({
+            exercise_name: '',
+            exercise_type: '',
+            exercise_category: '',
+          });
+        } catch (error) {
+          console.log(error);
+        }
+      },
+    });
   };
 
   return (
@@ -74,17 +119,85 @@ function SelectExerciseModal({
             <Loader />
           )}
         </Row>
-        <ListGroup>
-          {filteredExercises.map((exercise) => (
-            <ListGroup.Item
-              key={exercise._id}
-              className='bg-dark text-light'
-              onClick={() => handleExerciseSelection(exercise)} // Handle exercise selection
+        <Row>
+          <Col xs={12}>
+            <Button
+              variant={addExerciseMode ? 'outline-danger' : 'outline-success'}
+              type='submit'
+              className='w-100 mb-2'
+              onClick={() => setAddExerciseMode(!addExerciseMode)}
             >
-              {exercise.exercise_name}
-            </ListGroup.Item>
-          ))}
-        </ListGroup>
+              {addExerciseMode ? 'Cancel' : 'Create New Exercise'}
+            </Button>
+          </Col>
+        </Row>
+
+        {/* Conditional render the add exercise form when the add exercise button is clicked */}
+        {addExerciseMode ? (
+          <Row>
+            <Col xs={12}>
+              <Form
+              // onSubmit={handleAddExercise}
+              >
+                <Form.Group controlId='exerciseName'>
+                  <Form.Control
+                    type='text'
+                    name='exercise_name'
+                    placeholder='Exercise Name'
+                    className='form-group-create-food bg-dark text-light mb-2'
+                    value={formData.exercise_name}
+                    onChange={handleChange}
+                  />
+                </Form.Group>
+                <Form.Group controlId='exerciseType'>
+                  <Form.Control
+                    type='text'
+                    name='exercise_type'
+                    placeholder='Exercise Type'
+                    className='form-group-create-food bg-dark text-light mb-2'
+                    value={formData.exercise_type}
+                    onChange={handleChange}
+                  />
+                </Form.Group>
+                <Form.Group controlId='exerciseCategory'>
+                  <Form.Control
+                    type='text'
+                    name='exercise_category'
+                    placeholder='Exercise Category'
+                    className='form-group-create-food bg-dark text-light mb-2'
+                    value={formData.exercise_category}
+                    onChange={handleChange}
+                  />
+                </Form.Group>
+                <Button
+                  variant='outline-success'
+                  type='submit'
+                  className='w-100'
+                  onClick={handleAddExercise}
+                  disabled={
+                    !formData.exercise_name ||
+                    !formData.exercise_type ||
+                    !formData.exercise_category
+                  }
+                >
+                  Add Exercise
+                </Button>
+              </Form>
+            </Col>
+          </Row>
+        ) : (
+          <ListGroup>
+            {filteredExercises.map((exercise) => (
+              <ListGroup.Item
+                key={exercise._id}
+                className='bg-dark text-light'
+                onClick={() => handleExerciseSelection(exercise)} // Handle exercise selection
+              >
+                {exercise.exercise_name}
+              </ListGroup.Item>
+            ))}
+          </ListGroup>
+        )}
       </Modal.Body>
       <Modal.Footer className='bg-dark'></Modal.Footer>
     </Modal>

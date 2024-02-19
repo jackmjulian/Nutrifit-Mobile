@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Button, Card, Col, Container, Form, Row } from 'react-bootstrap';
 import SelectExerciseModal from '../components/SelectExerciseModal';
 import { useGetExercisesQuery } from '../slices/exerciseApiSlice';
+import AddItemPopUp from '../components/AddItemPopUp';
 
 const FitnessScreen = () => {
   // Set modal state
@@ -38,15 +39,26 @@ const FitnessScreen = () => {
     // Prevent the default form submission behavior.
     event.preventDefault();
 
-    // Log the workout as an object.
-    console.log({
-      workoutName,
-      exercises: exercises.map((exercise) => ({
-        exercise_name:
-          exercise.exercise_name ||
-          (selectedExercise ? selectedExercise.exercise_name : ''),
-        sets: exercise.sets,
-      })),
+    // Call the AddItemPopUp component with the confirmation text and confirmCallback function.
+    AddItemPopUp({
+      title: 'Add Workout',
+      text: 'Are you sure you want to add this workout?',
+      confirmCallback: async () => {
+        try {
+          // Log the workout as an object.
+          console.log({
+            workoutName,
+            exercises: exercises.map((exercise) => ({
+              exercise_name:
+                exercise.exercise_name ||
+                (selectedExercise ? selectedExercise.exercise_name : ''),
+              sets: exercise.sets,
+            })),
+          });
+        } catch (error) {
+          console.log(error);
+        }
+      },
     });
   };
 
@@ -202,7 +214,7 @@ const FitnessScreen = () => {
                     name={`weight`}
                     placeholder='Weight'
                     value={set.set_weight}
-                    className='form-group-create-workout bg-dark text-light no-outline w-25'
+                    className='form-group-create-workout bg-dark text-light no-outline w-25 smaller-text'
                     onChange={handleFieldChange(
                       exerciseIndex,
                       setIndex,
@@ -214,7 +226,7 @@ const FitnessScreen = () => {
                     type='text'
                     name='reps'
                     placeholder='Reps'
-                    className='form-group-create-workout bg-dark text-light no-outline w-25'
+                    className='form-group-create-workout bg-dark text-light no-outline w-25 smaller-text'
                     value={set.set_reps}
                     onChange={handleFieldChange(
                       exerciseIndex,
@@ -227,7 +239,7 @@ const FitnessScreen = () => {
                     name={`notes`}
                     placeholder='Notes'
                     value={set.set_notes}
-                    className='form-group-create-workout bg-dark text-light no-outline'
+                    className='form-group-create-workout bg-dark text-light no-outline smaller-text w-50'
                     onChange={handleFieldChange(
                       exerciseIndex,
                       setIndex,
