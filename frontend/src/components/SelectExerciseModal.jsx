@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import SearchBar from './SearchBar';
 import { Button, Modal, ListGroup, Row, Col, Form } from 'react-bootstrap';
 import Loader from './Loader';
+import ButtonLoader from './ButtonLoader';
 import AddItemPopUp from './AddItemPopUp';
 import { useCreateExerciseMutation } from '../slices/exerciseApiSlice';
 
@@ -106,22 +107,24 @@ function SelectExerciseModal({
         {/* <SearchBar onSearch={setSearchQuery} /> */}
         <p>Filter by category</p>
         <Row>
+          {/* Render filter buttons for unique exercise categories */}
           {exerciseData ? (
-            exerciseData.map((exercise) => (
-              <Col key={exercise._id}>
+            Array.from(
+              // Create a new set of unique exercise categories
+              new Set(
+                exerciseData.map((exercise) => exercise.exercise_category)
+              )
+            ).map((category, index) => (
+              <Col key={index}>
                 <Button
                   variant='outline-success'
                   type='button'
-                  onClick={() =>
-                    handleCategoryFilter(exercise.exercise_category)
-                  }
+                  onClick={() => handleCategoryFilter(category)}
                   className={`mb-3 ${
-                    selectedCategory === exercise.exercise_category
-                      ? 'active'
-                      : ''
+                    selectedCategory === category ? 'active' : ''
                   }`}
                 >
-                  {exercise.exercise_category}
+                  {category}
                 </Button>
               </Col>
             ))
@@ -190,7 +193,7 @@ function SelectExerciseModal({
                     !formData.exercise_category
                   }
                 >
-                  Add Exercise
+                  {isLoading ? <ButtonLoader /> : 'Add Exercise'}
                 </Button>
               </Form>
             </Col>
