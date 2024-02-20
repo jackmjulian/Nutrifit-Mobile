@@ -53,6 +53,7 @@ const FitnessScreen = () => {
         set_weight: '',
         set_reps: '',
         set_notes: '',
+        workout_instance_id: '',
       },
     ],
   };
@@ -164,6 +165,46 @@ const FitnessScreen = () => {
   //   });
   // };
 
+  // const submitWorkoutHandler = async (event) => {
+  //   event.preventDefault();
+
+  //   AddItemPopUp({
+  //     title: 'Add Workout',
+  //     text: 'Are you sure you want to add this workout?',
+  //     confirmCallback: async () => {
+  //       try {
+  //         const createdWorkout = await createWorkout({
+  //           workout: { workout_name: workoutName },
+  //         });
+
+  //         for (const exercise of exercises) {
+  //           const addedExercise = await addExerciseToWorkout({
+  //             workoutId: createdWorkout.data._id,
+  //             exercise: { exercise_id: exercise.exercise_id },
+  //           });
+
+  //           for (const set of exercise.sets) {
+  //             const createdSet = await createSet({
+  //               set: {
+  //                 set_weight: set.set_weight,
+  //                 set_reps: set.set_reps,
+  //                 set_notes: set.set_notes,
+  //               },
+  //             });
+  //             // console.log('addedExercise: ', exercise.exercise_id);
+  //             await addSetToExercise({
+  //               exerciseId: exercise.exercise_id,
+  //               set: { set_id: createdSet.data._id },
+  //             });
+  //           }
+  //         }
+  //         console.log('complete');
+  //       } catch (error) {
+  //         console.log(error);
+  //       }
+  //     },
+  //   });
+  // };
   const submitWorkoutHandler = async (event) => {
     event.preventDefault();
 
@@ -172,32 +213,48 @@ const FitnessScreen = () => {
       text: 'Are you sure you want to add this workout?',
       confirmCallback: async () => {
         try {
+          // Create the workout with workout_instance_id
           const createdWorkout = await createWorkout({
             workout: { workout_name: workoutName },
           });
 
-          for (const exercise of exercises) {
-            const addedExercise = await addExerciseToWorkout({
-              workoutId: createdWorkout.data._id,
-              exercise: { exercise_id: exercise.exercise_id },
-            });
+          const workoutInstance = createdWorkout.data.workout_instance_id;
+          // console.log('workout_instance: ', workoutInstance);
 
+          for (const exercise of exercises) {
             for (const set of exercise.sets) {
+              // Create set with workout_instance_id
               const createdSet = await createSet({
                 set: {
                   set_weight: set.set_weight,
                   set_reps: set.set_reps,
                   set_notes: set.set_notes,
+                  workout_instance_id: workoutInstance,
                 },
               });
-              // console.log('addedExercise: ', exercise.exercise_id);
+
+              console.log('createdSet : ', createdSet.data);
+              // Add set to the exercise using exercise_id and workout_instance_id
               await addSetToExercise({
                 exerciseId: exercise.exercise_id,
-                set: { set_id: createdSet.data._id },
+                set: {
+                  set_id: createdSet.data._id,
+                  workout_instance_id: workoutInstance,
+                },
               });
             }
+
+            // Add exercise to the workout using workout_instance_id
+            const addedExercise = await addExerciseToWorkout({
+              workoutId: createdWorkout.data._id,
+              exercise: {
+                exercise_id: exercise.exercise_id,
+                workout_instance_id: workoutInstance,
+              },
+            });
           }
-          console.log('complete');
+
+          console.log('createdWorkout: ', createdWorkout);
         } catch (error) {
           console.log(error);
         }

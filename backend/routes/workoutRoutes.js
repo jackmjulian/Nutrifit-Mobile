@@ -3,6 +3,7 @@ const router = express.Router();
 import {
   getWorkouts,
   getWorkoutById,
+  getWorkoutByInstanceId,
   createWorkout,
   updateWorkout,
   deleteWorkout,
@@ -22,6 +23,9 @@ router
   .get(protect, getWorkoutById)
   .put(protect, updateWorkout)
   .delete(protect, deleteWorkout);
+
+// Route for a single workout using workout_instance_id
+router.route('/instance/:instanceId').get(protect, getWorkoutByInstanceId);
 
 // Route for adding an exercise to a workout
 router.route('/:id/addexercise').post(protect, addExerciseToWorkout);

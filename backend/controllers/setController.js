@@ -27,13 +27,14 @@ const getSetById = asyncHandler(async (req, res) => {
 // @route   POST /api/sets
 // @access  Private
 const createSet = asyncHandler(async (req, res) => {
-  const { set_weight, set_reps, set_notes } = req.body;
+  const { set_weight, set_reps, set_notes, workout_instance_id } = req.body;
 
   const set = new Set({
     user: req.user._id,
     set_weight,
     set_reps,
     set_notes,
+    workout_instance_id, // Include workout_instance_id in the request body
   });
 
   const createdSet = await set.save();

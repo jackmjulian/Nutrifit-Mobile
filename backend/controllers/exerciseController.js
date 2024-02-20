@@ -52,9 +52,10 @@ const createExercise = asyncHandler(async (req, res) => {
 // @access  Private
 const addSetToExercise = asyncHandler(async (req, res) => {
   const exercise = await Exercise.findById(req.params.id); // req.params.id is the id from the url
-  const setId = req.body.set_id;
+  const { set_id, workout_instance_id } = req.body;
   if (exercise) {
-    const set = await Set.findById(setId);
+    const set = await Set.findById(set_id);
+    set.workout_instance_id = workout_instance_id;
     exercise.exercise_sets.push(set);
     const updatedExercise = await exercise.save();
     res.status(200).json(updatedExercise);
