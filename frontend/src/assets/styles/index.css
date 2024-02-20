@@ -44,7 +44,45 @@ body {
   color: white;
 }
 
-/* fix dashboard navbar to the bottom of the screen */
+/* *  -----------------  Nutrition Screen  ---------------------- * */
+
+.thumbnail {
+  width: 80%;
+  height: 30vh;
+  object-fit: cover;
+  border-radius: 30px; /* * You can adjust the radius as needed * */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.25);
+}
+
+.thumbnail-main {
+  height: 80vh;
+}
+
+.thumbnail-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.overlay-text {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white; /* * Adjust the color for readability * */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7); /* * Shadow for better contrast * */
+}
+
+.overlay-text-one {
+  position: absolute;
+  top: 80%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white; /* * Adjust the color for readability * */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7); /* * Shadow for better contrast * */
+}
+
+/* * fix dashboard navbar to the bottom of the screen * */
 
 .dashboard-nav {
   position: fixed;
@@ -58,7 +96,8 @@ body {
   font-size: 20px;
 }
 
-/*  -----------------  Nutrition Screen  ---------------------- */
+/* * -----------------  Nutrition Screen  ---------------------- * */
+
 .nutrition-card {
   width: 90vw;
   /* height: '30rem'; */
@@ -70,7 +109,7 @@ body {
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
 }
 
-/*  -----------------  Create Food Modal  ---------------------- */
+/* * -----------------  Create Food Modal  ---------------------- * */
 
 .form-group-create-food {
   /* height: 8vh; */
@@ -81,7 +120,7 @@ body {
   color: lightgrey;
 }
 
-/*  -----------------  Create Workout Page  ---------------------- */
+/* *  -----------------  Create Workout Page  ---------------------- * */
 
 /* .form-group-create-workout {
 
