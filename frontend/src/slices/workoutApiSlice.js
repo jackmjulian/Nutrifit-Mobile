@@ -27,6 +27,14 @@ export const workoutApiSlice = apiSlice.injectEndpoints({
       }),
       providesTags: ['Workouts'],
     }),
+    getWorkoutByInstanceId: builder.query({
+      query: (instanceId) => ({
+        url: `${WORKOUTS_URL}/instance/${instanceId}`,
+      }),
+      providesTags: (result, error, instanceId) => [
+        { type: 'Workouts', id: instanceId },
+      ],
+    }),
   }),
 });
 
@@ -34,4 +42,5 @@ export const {
   useCreateWorkoutMutation,
   useAddExerciseToWorkoutMutation,
   useGetWorkoutsQuery,
+  useGetWorkoutByInstanceIdQuery,
 } = workoutApiSlice;

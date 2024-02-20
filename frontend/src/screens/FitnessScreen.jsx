@@ -1,68 +1,45 @@
 import { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Container, Card, Col, Row, Button } from 'react-bootstrap';
-import { useGetFoodsQuery } from '../slices/foodApiSlice';
 import Loader from '../components/Loader';
 import Message from '../components/Message';
 import SearchBar from '../components/SearchBar';
-import FoodModal from '../components/FoodModal';
-import CreateFoodModal from '../components/CreateFoodModal';
-import { useGetWorkoutsQuery } from '../slices/workoutSlice';
+import { useGetWorkoutsQuery } from '../slices/workoutApiSlice';
+import formatDate from '../utils/formatDate';
 
 const FitnessScreen = () => {
-  // const { data: foods, isLoading, isError } = useGetFoodsQuery();
-  // console.log('Food Page', foods);
+  // Get workout data
   const { data: workouts, isLoading, isError } = useGetWorkoutsQuery();
+  console.log('workouts', workouts);
 
-  // Get the search term from the URL
-  // const { id: mealId } = useParams();
-  // console.log(mealId);
+  // Initialize useNavigate
+  const navigate = useNavigate();
 
   // Set search term and results state
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState([]);
 
-  // // Set modal show state
-  // const [modalShow, setModalShow] = useState(false);
+  // Handle search term change for filtered workouts
+  const handleSearch = (term) => {
+    setSearchTerm(term);
+    if (term) {
+      const results = workouts.filter((workout) =>
+        workout.workout_name.toLowerCase().includes(term.toLowerCase())
+      );
+      setSearchResults(results);
+    } else {
+      setSearchResults([]);
+    }
+  };
 
-  // // Additional state for the second create food modal
-  // const [createFoodModalShow, setCreateFoodModalShow] = useState(false);
+  // If there is a search term, display the search results, otherwise display all workouts
+  const workoutsToDisplay = searchTerm ? searchResults : workouts;
 
-  // Set selected food for the modal to display
-  const [selectedWorkout, setSelectedWorkout] = useState(null);
-
-  // Handle search term change for filtered foods
-  // const handleSearch = (term) => {
-  //   setSearchTerm(term);
-  //   if (term) {
-  //     const results = foods.filter((food) =>
-  //       food.food_name.toLowerCase().includes(term.toLowerCase())
-  //     );
-  //     setSearchResults(results);
-  //   } else {
-  //     setSearchResults([]);
-  //   }
-  // };
-
-  // // Handle modal click to display selected food
-  // const handleModalClick = (food) => {
-  //   setSelectedWorkout(food);
-  //   setModalShow(true);
-  //   // console.log(food);
-  // };
-
-  // // Handle modal click to open create food modal
-  // const handleCreateFoodModalClick = () => {
-  //   setCreateFoodModalShow(true);
-  // };
-
-  // Callback function to update selected food when edited
-  // const updateSelectedFood = (updatedFood) => {
-  //   setSelectedWorkout(updatedFood);
-  // };
-
-  // If there is a search term, display the search results, otherwise display all foods
-  // const foodsToDisplay = searchTerm ? searchResults : foods;
+  // Handle workout click
+  const handleWorkoutClick = (workoutInstance) => {
+    navigate(`/fitness/repeat-workout/${workoutInstance}`);
+    console.log(workoutInstance);
+  };
 
   return (
     <Container className='bg-none text-light p-4'>
@@ -70,17 +47,14 @@ const FitnessScreen = () => {
       <Row>
         <Col>
           {' '}
-          <SearchBar
-          // onSearch={handleSearch}
-          />
+          <SearchBar onSearch={handleSearch} />
         </Col>
       </Row>
-      {/* Static card */}
       <Card className='bg-dark text-light mb-2'>
         <Button
           variant='outline-success'
           type='submit'
-          // onClick={() => handleCreateFoodModalClick()}
+          onClick={() => navigate('/fitness/create-workout')}
         >
           Create New Workout
         </Button>
@@ -92,38 +66,41 @@ const FitnessScreen = () => {
           {isError?.data?.message || isError.error}
         </Message>
       ) : (
-        <h1>Workouts</h1>
-        // foodsToDisplay.map((food) => (
-        //   <Card key={food._id} className='bg-dark text-light mb-2'>
-        //     <Card.Body
-        //       className='pt-1 pb-1'
-        //       onClick={() => handleModalClick(food)}
-        //     >
-        //       <Row>
-        //         <Col xs={8} className='text-truncate'>
-        //           {/* {food.food_name} */}
-        //           workout name
-        //         </Col>
-        //         <Col xs={4} className='text-end'>
-        //           {/* {food.food_calories}cal */}
-        //           date
-        //         </Col>
-        //       </Row>
-        //     </Card.Body>
-        //   </Card>
-        // ))
+        // map through all the workout data
+        workoutsToDisplay.map((workout) => (
+          <Card
+            key={workout.workout_instance_id}
+            className='bg-dark text-light mb-2'
+            onClick={() => handleWorkoutClick(workout.workout_instance_id)}
+          >
+            <Card.Body
+              className='pt-1 pb-1'
+              // onClick={() => handleModalClick(food)}
+            >
+              <Row>
+                <Col xs={8} className='text-truncate'>
+                  {/* {food.food_name} */}
+                  <h4>{workout.workout_name}</h4>
+                </Col>
+                <Col xs={4} className='text-end'>
+                  {/* {food.food_calories}cal */}
+                  <h6>{formatDate(workout.createdAt)}</h6>
+                </Col>
+              </Row>
+              <Row>
+                <Col xs={8} className='text-truncate'>
+                  {workout.workout_exercises.map((exercise, index) => (
+                    // console.log(exercise.exercise_sets.length)
+                    <h6
+                      key={index}
+                    >{`${exercise.exercise_sets.length}x ${exercise.exercise_name}`}</h6>
+                  ))}
+                </Col>
+              </Row>
+            </Card.Body>
+          </Card>
+        ))
       )}
-      {/* <FoodModal
-        show={modalShow}
-        onHide={() => setModalShow(false)}
-        food={selectedWorkout}
-        meal={mealId}
-        setSelectedWorkout={setSelectedWorkout} // Pass down the state to the modal
-      />
-      <CreateFoodModal
-        show={createFoodModalShow}
-        onHide={() => setCreateFoodModalShow(false)}
-      /> */}
     </Container>
   );
 };
