@@ -5,8 +5,30 @@ import { Workout, Exercise } from '../models/workoutModel.js';
 // @desc    Fetch all workouts
 // @route   GET /api/workouts
 // @access  Private
+// const getWorkouts = asyncHandler(async (req, res) => {
+//   const workouts = await Workout.find({}); // empty object returns all workouts
+//   res.status(200).json(workouts);
+// });
+// @desc    Fetch all workouts with matching exercises and sets
+// @route   GET /api/workouts
+// @access  Private
 const getWorkouts = asyncHandler(async (req, res) => {
-  const workouts = await Workout.find({}); // empty object returns all workouts
+  // Retrieve all workouts
+  const workouts = await Workout.find({});
+
+  // Populate exercises and sets for each workout
+  for (const workout of workouts) {
+    // Filter exercises and sets belonging to the current workout_instance_id
+    workout.workout_exercises = workout.workout_exercises.filter(
+      (exercise) => exercise.workout_instance_id === workout.workout_instance_id
+    );
+    for (const exercise of workout.workout_exercises) {
+      exercise.exercise_sets = exercise.exercise_sets.filter(
+        (set) => set.workout_instance_id === workout.workout_instance_id
+      );
+    }
+  }
+
   res.status(200).json(workouts);
 });
 
@@ -67,10 +89,20 @@ const createWorkout = asyncHandler(async (req, res) => {
 // @access  Private
 const addExerciseToWorkout = asyncHandler(async (req, res) => {
   const workout = await Workout.findById(req.params.id);
-  const { exercise_id, workout_instance_id } = req.body; // Include workout_instance_id in the request body
+  const { workout_instance_id } = req.body; // Include workout_instance_id in the request body
   if (workout) {
-    const exercise = await Exercise.findById(exercise_id);
-    exercise.workout_instance_id = workout_instance_id; // Set workout_instance_id for the exercise
+    // Find the exercise by workout_instance_id
+    const exercise = await Exercise.findOne({
+      // _id: exercise_id,
+      workout_instance_id: workout_instance_id,
+    });
+    if (!exercise) {
+      res.status(404);
+      throw new Error(
+        'Exercise not found for the provided workout_instance_id'
+      );
+    }
+
     workout.workout_exercises.push(exercise);
     const updatedWorkout = await workout.save();
     res.status(200).json(updatedWorkout);

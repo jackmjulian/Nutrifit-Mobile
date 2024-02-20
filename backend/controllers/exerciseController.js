@@ -54,6 +54,7 @@ const addSetToExercise = asyncHandler(async (req, res) => {
   const exercise = await Exercise.findById(req.params.id); // req.params.id is the id from the url
   const { set_id, workout_instance_id } = req.body;
   if (exercise) {
+    exercise.workout_instance_id = workout_instance_id;
     const set = await Set.findById(set_id);
     set.workout_instance_id = workout_instance_id;
     exercise.exercise_sets.push(set);
