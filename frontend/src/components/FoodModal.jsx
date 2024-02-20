@@ -43,32 +43,36 @@ function FoodModal({ show, onHide, food, meal, setSelectedFood }) {
   const [updateFoods, { isLoading }] = useUpdateFoodsMutation();
 
   const handleAddFood = async () => {
-    AddItemPopUp(async () => {
-      try {
-        // Ensure both food and meal are present
-        if (food && meal) {
-          // console.log('food id:', food._id);
-          // console.log('meal id:', meal);
-          // Make an API call to add food to the meal
-          const response = await addFoodToMeal({
-            mealId: meal,
-            foodId: food._id,
-          });
+    AddItemPopUp({
+      title: 'Add Food',
+      text: 'Are you sure you want to add this food?',
+      confirmCallback: async () => {
+        try {
+          // Ensure both food and meal are present
+          if (food && meal) {
+            // console.log('food id:', food._id);
+            // console.log('meal id:', meal);
+            // Make an API call to add food to the meal
+            const response = await addFoodToMeal({
+              mealId: meal,
+              foodId: food._id,
+            });
 
-          // Handle success or error response here if necessary
-          console.log('Food added to meal:', response);
+            // Handle success or error response here if necessary
+            console.log('Food added to meal:', response);
 
-          // After successfully adding food, trigger a refetch of meal data
-          refetchMeals(); // This will refetch meal data from the server
+            // After successfully adding food, trigger a refetch of meal data
+            refetchMeals(); // This will refetch meal data from the server
 
-          // Close the modal after successfully adding food
-          onHide();
-        } else {
-          console.error('Food or meal not selected');
+            // Close the modal after successfully adding food
+            onHide();
+          } else {
+            console.error('Food or meal not selected');
+          }
+        } catch (error) {
+          console.error('Error adding food to meal:', error);
         }
-      } catch (error) {
-        console.error('Error adding food to meal:', error);
-      }
+      },
     });
   };
 

@@ -16,8 +16,9 @@ import LoginScreen from './screens/LoginScreen.jsx';
 import RegisterScreen from './screens/RegisterScreen.jsx';
 import DashBoardScreen from './screens/DashBoardScreen.jsx';
 import NutritionScreen from './screens/NutritionScreen.jsx';
-import FitnessScreen from './screens/FitnessScreen.jsx';
 import FoodScreen from './screens/FoodScreen.jsx';
+import FitnessScreen from './screens/FitnessScreen.jsx';
+import CreateWorkoutScreen from './screens/CreateWorkoutScreen.jsx';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -29,6 +30,7 @@ const router = createBrowserRouter(
       <Route path='/dashboard' element={<DashBoardScreen />} />
       <Route path='/nutrition' element={<NutritionScreen />} />
       <Route path='/fitness' element={<FitnessScreen />} />
+      <Route path='/fitness/createworkout' element={<CreateWorkoutScreen />} />
       <Route path='/nutrition/:id' element={<FoodScreen />} />
     </Route>
   )
