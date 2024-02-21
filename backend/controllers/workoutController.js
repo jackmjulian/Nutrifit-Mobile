@@ -16,19 +16,23 @@ const getWorkouts = asyncHandler(async (req, res) => {
   // Retrieve all workouts
   const workouts = await Workout.find({});
 
+  console.log(workouts);
+
   // Populate exercises and sets for each workout
   for (const workout of workouts) {
     // Filter exercises and sets belonging to the current workout_instance_id
     workout.workout_exercises = workout.workout_exercises.filter(
       (exercise) => exercise.workout_instance_id === workout.workout_instance_id
+
+      // console.log(exercise.workout_instance_id)
     );
+    console.log(workout.workout_exercises);
     for (const exercise of workout.workout_exercises) {
       exercise.exercise_sets = exercise.exercise_sets.filter(
         (set) => set.workout_instance_id === workout.workout_instance_id
       );
     }
   }
-
   res.status(200).json(workouts);
 });
 

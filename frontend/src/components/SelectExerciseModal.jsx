@@ -1,10 +1,20 @@
 import React, { useState } from 'react';
 import SearchBar from './SearchBar';
-import { Button, Modal, ListGroup, Row, Col, Form } from 'react-bootstrap';
+import {
+  Button,
+  Modal,
+  ListGroup,
+  Row,
+  Col,
+  Form,
+  DropdownButton,
+  DropdownToggle,
+} from 'react-bootstrap';
 import Loader from './Loader';
 import ButtonLoader from './ButtonLoader';
 import AddItemPopUp from './AddItemPopUp';
 import { useCreateExerciseMutation } from '../slices/exerciseApiSlice';
+import Dropdown from 'react-bootstrap/Dropdown';
 
 function SelectExerciseModal({
   show,
@@ -100,36 +110,45 @@ function SelectExerciseModal({
   return (
     <Modal show={show} onHide={onHide} size='xs' centered backdrop='static'>
       <Modal.Header className='bg-dark' closeVariant='white' closeButton>
-        <Modal.Title>Select Exercise</Modal.Title>
+        <Modal.Title>
+          {/* Conditional title based on addExerciseMode */}
+          {addExerciseMode ? 'Add Exercise' : 'Select Exercise'}
+        </Modal.Title>
       </Modal.Header>
       <Modal.Body className='bg-dark'>
         {/* TODO: IMPLEMENT A FILTER BAR HERE */}
         {/* <SearchBar onSearch={setSearchQuery} /> */}
-        <p>Filter by category</p>
+        {/* <p>Filter by category</p> */}
         <Row>
           {/* Render filter buttons for unique exercise categories */}
-          {exerciseData ? (
-            Array.from(
-              // Create a new set of unique exercise categories
-              new Set(
-                exerciseData.map((exercise) => exercise.exercise_category)
-              )
-            ).map((category, index) => (
-              <Col key={index}>
-                <Button
-                  variant='outline-success'
-                  type='button'
-                  onClick={() => handleCategoryFilter(category)}
-                  className={`mb-3 ${
-                    selectedCategory === category ? 'active' : ''
-                  }`}
-                >
-                  {category}
-                </Button>
-              </Col>
-            ))
-          ) : (
-            <Loader />
+          {!addExerciseMode && exerciseData && (
+            <Dropdown onSelect={handleCategoryFilter} className='mb-2'>
+              <Dropdown.Toggle variant='outline-success' className='w-100'>
+                Filter Categories
+              </Dropdown.Toggle>
+              <Dropdown.Menu
+                variant='outline-success'
+                className='bg-dark'
+                style={{ width: '94%' }}
+              >
+                {Array.from(
+                  // Create a new set of unique exercise categories
+                  new Set(
+                    exerciseData.map((exercise) => exercise.exercise_category)
+                  )
+                ).map((category, index) => (
+                  <Dropdown.Item
+                    key={index}
+                    eventKey={category}
+                    active={selectedCategory === category}
+                    variant='outline-success'
+                    className='text-light bg-dark text-center'
+                  >
+                    {category}
+                  </Dropdown.Item>
+                ))}
+              </Dropdown.Menu>
+            </Dropdown>
           )}
         </Row>
         <Row>
