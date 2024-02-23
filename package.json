@@ -10,7 +10,8 @@
     "client": "npm run dev --prefix frontend",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "data:import": "node backend/seeder.js",
-    "data:destroy": "node backend/seeder.js -d"
+    "data:destroy": "node backend/seeder.js -d",
+    "build": "npm install && npm install --prefix frontend && npm run build --prefix frontend"
   },
   "author": "JJ's PrePress & Pixels",
   "license": "ISC",
@@ -22,6 +23,7 @@
     "express": "^4.18.2",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.1.1",
+    "path": "^0.12.7",
     "uuid": "^9.0.1"
   },
   "devDependencies": {

@@ -1,5 +1,5 @@
+import path from 'path';
 import express from 'express';
-// import cors from 'cors';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 dotenv.config(); // Initialise dotenv to use .env files
@@ -53,6 +53,18 @@ app.use('/api/sets', setRoutes);
 
 // Route: /api/users
 app.use('/api/users', userRoutes);
+
+if (process.env.NODE_ENV === 'production') {
+  const __dirname = path.resolve();
+  app.use(express.static(path.join(__dirname, '/frontend/dist')));
+  app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, 'frontend', 'dist', 'index.html'));
+  });
+} else {
+  app.get('/', (req, res) => {
+    res.send('API is running...');
+  });
+}
 
 // Error middleware
 app.use(notFound);
