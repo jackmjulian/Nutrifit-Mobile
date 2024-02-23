@@ -60,14 +60,17 @@ const NutritionScreen = () => {
   };
 
   const handleDeleteFood = async (mealId, foodInstanceId) => {
-    // Display a confirmation dialog using SweetAlert2
-    DeleteItemPopUp(async () => {
-      try {
-        await deleteFoodFromMeal({ mealId, foodInstanceId });
-        refetchMeals();
-      } catch (error) {
-        console.error('Error deleting food:', error.message);
-      }
+    DeleteItemPopUp({
+      title: 'Delete Food',
+      message: 'Are you sure you want to delete this food?',
+      confirmCallback: async () => {
+        try {
+          await deleteFoodFromMeal({ mealId, foodInstanceId });
+          refetchMeals();
+        } catch (error) {
+          console.error('Error deleting food:', error.message);
+        }
+      },
     });
   };
 

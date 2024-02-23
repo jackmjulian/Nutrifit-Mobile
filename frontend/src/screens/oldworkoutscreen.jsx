@@ -21,39 +21,6 @@ const CreateWorkoutScreen = () => {
   // Initialize useNavigate
   const navigate = useNavigate();
 
-  // Get the workout instance ID from the URL
-  const { id } = useParams();
-  // console.log('workout_instance_id: ', id);
-
-  // TODO: Figure out how to stop this from running on page load when there is no id
-  // Get the workout by instance ID
-  const { data: repeatWorkoutData, isLoading: isWorkoutLoading } =
-    useGetWorkoutByInstanceIdQuery(id);
-
-  useEffect(() => {
-    if (repeatWorkoutData) {
-      setWorkoutName(repeatWorkoutData.workout_name); // Set workout name
-      const initialExercises = repeatWorkoutData.workout_exercises.map(
-        (exercise) => {
-          console.log(exercise._id, exercise.exercise_name);
-          return {
-            exercise_id: exercise._id,
-            exercise_name: exercise.exercise_name,
-            sets: exercise.exercise_sets.map((set) => {
-              return {
-                set_weight: set.set_weight,
-                set_reps: set.set_reps,
-                set_notes: set.set_notes,
-                workout_instance_id: '',
-              };
-            }),
-          };
-        }
-      );
-      setExercises(initialExercises); // Set exercises
-    }
-  }, [repeatWorkoutData]);
-
   // Set modal show state
   const [selectExerciseModalShow, setSelectExerciseModalShow] = useState(false);
 
@@ -115,10 +82,9 @@ const CreateWorkoutScreen = () => {
           const createdWorkout = await createWorkout({
             workout: { workout_name: workoutName },
           });
-          console.log('createdWorkout: ', createdWorkout);
 
           const workoutInstance = createdWorkout.data.workout_instance_id;
-          console.log('NEW workout_instance: ', workoutInstance);
+          // console.log('workout_instance: ', workoutInstance);
 
           for (const exercise of exercises) {
             for (const set of exercise.sets) {
@@ -129,7 +95,8 @@ const CreateWorkoutScreen = () => {
               //   set.set_notes,
               //   workoutInstance
               // );
-              // Create set with workout_instance_id
+              // console.log(exercise.exercise_id);
+              // // Create set with workout_instance_id
               const createdSet = await createSet({
                 set: {
                   set_weight: set.set_weight,
@@ -302,9 +269,7 @@ const CreateWorkoutScreen = () => {
       <Form
       // onSubmit={submitWorkoutHandler}
       >
-        <h1 className='nutrition-overlay-text'>
-          {repeatWorkoutData ? 'Repeat Workout' : 'Create Workout'}
-        </h1>
+        <h1 className='nutrition-overlay-text'>Create Workout</h1>
         <Card className='bg-dark text-light p-2 mb-2'>
           <Form.Group controlId='workoutName' className='d-flex'>
             <Form.Control

@@ -1,9 +1,9 @@
 import Swal from 'sweetalert2';
 
-const DeleteItemPopUp = async (confirmCallback) => {
+const DeleteItemPopUp = async ({ title, text, confirmCallback }) => {
   const result = await Swal.fire({
-    title: 'Are you sure?',
-    text: 'You are about to delete this item.',
+    title: title || 'Delete item?',
+    text: text || 'You are about to delete this item.',
     icon: 'warning',
     showCancelButton: true,
     confirmButtonColor: '#198754',

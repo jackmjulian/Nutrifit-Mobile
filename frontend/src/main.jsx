@@ -34,7 +34,7 @@ const router = createBrowserRouter(
       <Route path='/fitness/create-workout' element={<CreateWorkoutScreen />} />
       <Route
         path='/fitness/repeat-workout/:id'
-        element={<RepeatWorkoutScreen />}
+        element={<CreateWorkoutScreen />}
       />
       <Route path='/nutrition/:id' element={<FoodScreen />} />
     </Route>
