@@ -28,7 +28,9 @@ const CreateWorkoutScreen = () => {
   // TODO: Figure out how to stop this from running on page load when there is no id
   // Get the workout by instance ID
   const { data: repeatWorkoutData, isLoading: isWorkoutLoading } =
-    useGetWorkoutByInstanceIdQuery(id);
+    useGetWorkoutByInstanceIdQuery(id, {
+      skip: !id,
+    });
 
   useEffect(() => {
     if (repeatWorkoutData) {
@@ -333,10 +335,11 @@ const CreateWorkoutScreen = () => {
           </Form.Group>
         </Card>
 
-        {/* Map through each of the exercise cards added by user */}
+        {/* //! Map through each of the exercise cards added by user */}
 
         {exercises.map((exercise, exerciseIndex) => (
           <Card className='bg-dark text-light px-3 mb-2' key={exerciseIndex}>
+            {isWorkoutLoading ? <Loader /> : null}
             <Row>
               <Form.Group
                 id='exerciseName'
@@ -445,7 +448,8 @@ const CreateWorkoutScreen = () => {
             />
           </Card>
         ))}
-        {/* End of exercise map */}
+
+        {/* //! End of exercise map */}
 
         <Card className='bg-dark text-light px-3 mt-2'>
           <Form.Group controlId='addExerciseButton'>
