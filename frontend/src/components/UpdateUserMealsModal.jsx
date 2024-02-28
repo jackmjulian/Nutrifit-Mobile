@@ -88,7 +88,7 @@ function UpdateUserMealsModal({ show, onHide, userMeals, refetchMeals }) {
     <Modal show={show} onHide={onHide} size='xs' centered backdrop='static'>
       <Modal.Header className='bg-dark' closeVariant='white' closeButton>
         <Modal.Title id='contained-modal-title-vcenter'>
-          Update User Meals
+          {addMealForm ? 'Create New Meal' : 'Update Meals'}
         </Modal.Title>
       </Modal.Header>
       <Modal.Body className='bg-dark '>
@@ -98,7 +98,7 @@ function UpdateUserMealsModal({ show, onHide, userMeals, refetchMeals }) {
               <Form.Control
                 type='text'
                 name='meal_name'
-                placeholder='Add New Meal'
+                placeholder='New Meal Name'
                 value={mealName}
                 onChange={(e) => setMealName(e.target.value)}
                 className='form-group-create-food bg-dark text-light'

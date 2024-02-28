@@ -97,7 +97,7 @@ const UserDashboard = () => {
         <Loader />
       ) : (
         <Container className='w-100'>
-          <h1 className='nutrition-overlay-text text-start'>Dashboard</h1>
+          {/* <h1 className='nutrition-overlay-text text-start'>Dashboard</h1> */}
           <Row className='mb-2'>
             <Col xs={12}>
               <Card className='text-white bg-dark'>

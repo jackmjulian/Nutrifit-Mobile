@@ -175,7 +175,7 @@ const NutritionScreen = () => {
           variant='outline-success w-100 mt-2'
           onClick={() => setShowUpdateUserMealsModal(true)}
         >
-          Edit User Meals
+          Edit Meals
         </Button>
       </Container>
       {isLoading ? null : (
