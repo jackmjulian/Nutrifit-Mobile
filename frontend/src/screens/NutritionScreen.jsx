@@ -19,6 +19,8 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import CalorieTracker from '../components/CalorieTracker';
 import DeleteItemPopUp from '../components/DeleteItemPopUp';
+import UpdateUserMealsModal from '../components/UpdateUserMealsModal';
+import ButtonLoader from '../components/ButtonLoader';
 
 const mealImages = [
   preworkoutCard,
@@ -31,6 +33,10 @@ const mealImages = [
 
 const NutritionScreen = () => {
   const { userInfo } = useSelector((state) => state.auth);
+
+  // Set modal state
+  const [showUpdateUserMealsModal, setShowUpdateUserMealsModal] =
+    useState(false);
   const {
     data: userMeals,
     isLoading,
@@ -76,7 +82,7 @@ const NutritionScreen = () => {
 
   return (
     <>
-      <Container className='d-flex justify-content-center align-items-center mt-2 mb-2'>
+      <Container className='mt-2 mb-2 d-flex justify-content-center align-items-center'>
         <DatePicker
           selected={startdate}
           onChange={(date) => setStartDate(date)}
@@ -101,7 +107,7 @@ const NutritionScreen = () => {
           <Carousel interval={null} controls={false}>
             {userMeals.map((meal, index) => (
               <Carousel.Item key={meal._id}>
-                <Card className='nutrition-card bg-dark text-white '>
+                <Card className='text-white nutrition-card bg-dark '>
                   <Card.Img
                     variant='top'
                     src={mealImages[index % mealImages.length]}
@@ -164,6 +170,22 @@ const NutritionScreen = () => {
           </Carousel>
         )}
       </Container>
+      <Container>
+        <Button
+          variant='outline-success w-100 mt-2'
+          onClick={() => setShowUpdateUserMealsModal(true)}
+        >
+          Edit User Meals
+        </Button>
+      </Container>
+      {isLoading ? null : (
+        <UpdateUserMealsModal
+          show={showUpdateUserMealsModal}
+          onHide={() => setShowUpdateUserMealsModal(false)}
+          userMeals={userMeals}
+          refetchMeals={refetchMeals}
+        />
+      )}
     </>
   );
 };

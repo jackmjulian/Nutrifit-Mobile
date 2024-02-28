@@ -143,10 +143,8 @@ const updateUserProfile = asyncHandler(async (req, res) => {
 
     // Respond with updated user data
     res.status(200).json({
-      _id: updatedUser._id,
       name: updatedUser.name,
       email: updatedUser.email,
-      isAdmin: updatedUser.isAdmin,
       calorie_goal: updatedUser.calorie_goal,
     });
   } else {
@@ -168,7 +166,15 @@ const getAllUsers = asyncHandler(async (req, res) => {
 // @route GET /api/users/:id
 // @access Private/Admin
 const getUserByID = asyncHandler(async (req, res) => {
-  res.send('get user by ID');
+  const user = await User.findById(req.params.id);
+
+  if (user) {
+    res.status(200).json(user);
+  } else {
+    res.status(404);
+    throw new Error('User not found');
+  }
+  // res.send('get user by ID');
 });
 
 // @desc Delete users
@@ -178,11 +184,56 @@ const deleteUser = asyncHandler(async (req, res) => {
   res.send('delete user');
 });
 
-// @desc Update user
-// @route PUT /api/users/:id
-// @access Private/Admin
-const updateUser = asyncHandler(async (req, res) => {
-  res.send('update user');
+// @desc Log new weight
+// @route POST /api/users/weight
+// @access Private
+const logWeight = asyncHandler(async (req, res) => {
+  // find user by id
+  // req.user._id is the logged in user's ID
+  const user = await User.findById(req.user._id);
+
+  // if user exists, log weight
+  if (user) {
+    // create new weight object
+    const newWeight = {
+      user: user._id,
+      weight: req.body.weight,
+      weight_units: req.body.weight_units,
+    };
+
+    // push new weight object to user's weight array
+    user.weight.push(newWeight);
+
+    // save user's updated weight array
+    await user.save();
+
+    res.status(201).json({ message: 'Weight logged' });
+  } else {
+    res.status(404);
+    throw new Error('User not found');
+  }
+});
+
+// @desc Update calorie goal
+// @route PUT /api/users/calorie-goal
+// @access Private
+const updateCalorieGoal = asyncHandler(async (req, res) => {
+  // find user by id
+  // req.user._id is the logged in user's ID
+  const user = await User.findById(req.user._id);
+
+  // if user exists, update calorie goal
+  if (user) {
+    user.calorie_goal = req.body.calorie_goal;
+
+    // save user's updated calorie goal
+    await user.save();
+
+    res.status(201).json({ message: 'Calorie goal updated' });
+  } else {
+    res.status(404);
+    throw new Error('User not found');
+  }
 });
 
 export {
@@ -194,5 +245,6 @@ export {
   getAllUsers,
   getUserByID,
   deleteUser,
-  updateUser,
+  logWeight,
+  updateCalorieGoal,
 };

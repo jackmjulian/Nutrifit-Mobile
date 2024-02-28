@@ -1,7 +1,8 @@
 import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Navbar, Nav, Container } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useLogoutMutation } from '../slices/usersApiSlice';
 import { logout } from '../slices/authSlice';
 import { RxDashboard } from 'react-icons/rx';
@@ -14,6 +15,9 @@ const DashboardBar = () => {
 
   // Get the logout call from useLogoutMutation, you can name this anything
   const [logoutApiCall, { isLoading }] = useLogoutMutation();
+
+  // Get user info from the state
+  const { userInfo } = useSelector((state) => state.auth);
 
   // TODO: Implement the logoutHandler Loader to avoid the console error when the user logs out
 
@@ -34,14 +38,14 @@ const DashboardBar = () => {
       <Navbar variant='dark' className='dashboard-nav'>
         <Container className='d-flex justify-content-evenly'>
           <LinkContainer
-            to='/dashboard'
-            onClick={() => console.log('userDashboard')}
+            to={`/dashboard/${userInfo._id}`}
+            // onClick={() => console.log('userDashboard')}
           >
             <Nav.Link>
               <RxDashboard size={30} />
             </Nav.Link>
           </LinkContainer>
-          <div onClick={() => console.log('Dashboard Logo')}>
+          <LinkContainer to='/dashboard'>
             <Nav className='d-flex align-items-center'>
               <img
                 src={Logo}
@@ -50,7 +54,7 @@ const DashboardBar = () => {
                 alt='React Bootstrap logo'
               />
             </Nav>
-          </div>
+          </LinkContainer>
           <LinkContainer to='/logout' onClick={logoutHandler}>
             <Nav.Link>
               <IoMdLogOut size={35} />

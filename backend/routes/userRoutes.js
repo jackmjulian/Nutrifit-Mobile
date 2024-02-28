@@ -9,7 +9,8 @@ import {
   getAllUsers,
   getUserByID,
   deleteUser,
-  updateUser,
+  logWeight,
+  updateCalorieGoal,
 } from '../controllers/userController.js';
 import { protect, admin } from '../middleware/authMiddleware.js';
 
@@ -36,7 +37,12 @@ router
 router
   .route('/:id')
   .get(protect, admin, getUserByID)
-  .delete(protect, admin, deleteUser)
-  .put(protect, admin, updateUser);
+  .delete(protect, admin, deleteUser);
+
+// Route for logging weight
+router.route('/weight').post(protect, logWeight);
+
+// Route for updating calorie goal
+router.route('/calorie-goal').put(protect, updateCalorieGoal);
 
 export default router;

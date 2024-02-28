@@ -28,10 +28,45 @@ export const usersApiSlice = apiSlice.injectEndpoints({
         method: 'POST',
       }),
     }),
+    getUserById: builder.query({
+      query: (id) => ({
+        url: `${USERS_URL}/${id}`,
+        method: 'GET',
+      }),
+      keepUnusedDataFor: 5,
+    }),
+    logNewWeight: builder.mutation({
+      query: (data) => ({
+        url: `${USERS_URL}/weight`,
+        method: 'POST',
+        body: data,
+      }),
+    }),
+    updateCalorieGoal: builder.mutation({
+      query: (data) => ({
+        url: `${USERS_URL}/calorie-goal`,
+        method: 'PUT',
+        body: data,
+      }),
+    }),
+    updateUserProfile: builder.mutation({
+      query: (data) => ({
+        url: `${USERS_URL}/profile`,
+        method: 'PUT',
+        body: data,
+      }),
+    }),
   }),
 });
 
 // This is the standard export pattern for a Redux-connected component mutation
 // prefix with 'use' and suffix with 'Mutation'
-export const { useLoginMutation, useLogoutMutation, useRegisterMutation } =
-  usersApiSlice;
+export const {
+  useLoginMutation,
+  useLogoutMutation,
+  useRegisterMutation,
+  useGetUserByIdQuery,
+  useLogNewWeightMutation,
+  useUpdateCalorieGoalMutation,
+  useUpdateUserProfileMutation,
+} = usersApiSlice;

@@ -64,22 +64,21 @@ body {
   align-items: center;
 }
 
-.overlay-text {
-  position: absolute;
-  top: 40%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  color: white; /* * Adjust the color for readability * */
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7); /* * Shadow for better contrast * */
+.thumbnail-wrapper {
+  position: relative;
 }
 
-.overlay-text-one {
+.thumbnail-link {
+  text-align: center;
+}
+
+.overlay-text {
   position: absolute;
-  top: 80%;
+  top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  color: white; /* * Adjust the color for readability * */
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7); /* * Shadow for better contrast * */
+  color: white;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
 }
 
 /* * fix dashboard navbar to the bottom of the screen * */

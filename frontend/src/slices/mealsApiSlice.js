@@ -32,6 +32,20 @@ export const mealsApiSlice = apiSlice.injectEndpoints({
         body: { foodInstanceId },
       }),
     }),
+    createNewMeal: builder.mutation({
+      query: ({ mealName }) => ({
+        url: `${MEALS_URL}`, // Concatenate userId with the base URL
+        method: 'POST',
+        body: mealName,
+      }),
+    }),
+    updateMeal: builder.mutation({
+      query: ({ mealId, mealName }) => ({
+        url: `${MEALS_URL}/${mealId}`, // Concatenate mealId with the base URL
+        method: 'PUT',
+        body: mealName,
+      }),
+    }),
   }),
 });
 
@@ -40,4 +54,6 @@ export const {
   useGetMealsByUserQuery,
   useAddFoodToMealMutation,
   useDeleteFoodFromMealMutation,
+  useCreateNewMealMutation,
+  useUpdateMealMutation,
 } = mealsApiSlice;
