@@ -4,12 +4,13 @@ import { Link } from 'react-router-dom';
 import DashboardBar from '../components/DashboardBar';
 import nutritionThumbnail from '../assets/images/nutrition-thumbnail.jpg';
 import fitnessThumbnail from '../assets/images/fitness-thumbnail.jpg';
+import Header from '../components/Header';
 
 const DashBoardScreen = () => {
-
   return (
     <>
-      <Container>
+      <Container className='vh-100'>
+      <Header />
         <Row className='thumbnail-main'>
           <Col xs={12} className='thumbnail-container'>
             <Link to='/nutrition' className='thumbnail-link'>

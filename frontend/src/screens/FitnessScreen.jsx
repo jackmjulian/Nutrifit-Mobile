@@ -6,6 +6,7 @@ import Message from '../components/Message';
 import SearchBar from '../components/SearchBar';
 import { useGetWorkoutsQuery } from '../slices/workoutApiSlice';
 import formatDate from '../utils/formatDate';
+import Header from '../components/Header';
 
 const FitnessScreen = () => {
   // Get workout data
@@ -42,66 +43,71 @@ const FitnessScreen = () => {
   };
 
   return (
-    <Container className='bg-none text-light p-4'>
-      <h1 className='nutrition-overlay-text'>Previous Workouts</h1>
-      <Row>
-        <Col>
-          {' '}
-          <SearchBar onSearch={handleSearch} />
-        </Col>
-      </Row>
-      <Card className='bg-dark text-light mb-2'>
-        <Button
-          variant='outline-success'
-          type='submit'
-          onClick={() => navigate('/fitness/create-workout')}
-        >
-          Create New Workout
-        </Button>
-      </Card>
-      {isLoading ? (
-        <Loader />
-      ) : isError ? (
-        <Message variant='danger'>
-          {isError?.data?.message || isError.error}
-        </Message>
-      ) : (
-        // map through all the workout data
-        workoutsToDisplay.map((workout) => (
-          <Card
-            key={workout.workout_instance_id}
-            className='bg-dark text-light mb-2'
-            onClick={() => handleWorkoutClick(workout.workout_instance_id)}
+    <>
+      <Container>
+        <Header />
+      </Container>
+      <Container className='bg-none text-light p-4'>
+        <h1 className='nutrition-overlay-text'>Previous Workouts</h1>
+        <Row>
+          <Col>
+            {' '}
+            <SearchBar onSearch={handleSearch} />
+          </Col>
+        </Row>
+        <Card className='bg-dark text-light mb-2'>
+          <Button
+            variant='outline-success'
+            type='submit'
+            onClick={() => navigate('/fitness/create-workout')}
           >
-            <Card.Body
-              className='pt-1 pb-1'
-              // onClick={() => handleModalClick(food)}
+            Create New Workout
+          </Button>
+        </Card>
+        {isLoading ? (
+          <Loader />
+        ) : isError ? (
+          <Message variant='danger'>
+            {isError?.data?.message || isError.error}
+          </Message>
+        ) : (
+          // map through all the workout data
+          workoutsToDisplay.map((workout) => (
+            <Card
+              key={workout.workout_instance_id}
+              className='bg-dark text-light mb-2'
+              onClick={() => handleWorkoutClick(workout.workout_instance_id)}
             >
-              <Row>
-                <Col xs={8} className='text-truncate'>
-                  {/* {food.food_name} */}
-                  <h4>{workout.workout_name}</h4>
-                </Col>
-                <Col xs={4} className='text-end'>
-                  {/* {food.food_calories}cal */}
-                  <h6>{formatDate(workout.createdAt)}</h6>
-                </Col>
-              </Row>
-              <Row>
-                <Col xs={8} className='text-truncate'>
-                  {workout.workout_exercises.map((exercise, index) => (
-                    // console.log(exercise.exercise_sets.length)
-                    <h6
-                      key={index}
-                    >{`${exercise.exercise_sets.length}x ${exercise.exercise_name}`}</h6>
-                  ))}
-                </Col>
-              </Row>
-            </Card.Body>
-          </Card>
-        ))
-      )}
-    </Container>
+              <Card.Body
+                className='pt-1 pb-1'
+                // onClick={() => handleModalClick(food)}
+              >
+                <Row>
+                  <Col xs={8} className='text-truncate'>
+                    {/* {food.food_name} */}
+                    <h4>{workout.workout_name}</h4>
+                  </Col>
+                  <Col xs={4} className='text-end'>
+                    {/* {food.food_calories}cal */}
+                    <h6>{formatDate(workout.createdAt)}</h6>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col xs={8} className='text-truncate'>
+                    {workout.workout_exercises.map((exercise, index) => (
+                      // console.log(exercise.exercise_sets.length)
+                      <h6
+                        key={index}
+                      >{`${exercise.exercise_sets.length}x ${exercise.exercise_name}`}</h6>
+                    ))}
+                  </Col>
+                </Row>
+              </Card.Body>
+            </Card>
+          ))
+        )}
+      </Container>
+    </>
   );
 };
 export default FitnessScreen;

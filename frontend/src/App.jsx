@@ -11,7 +11,7 @@ const App = () => {
   return (
     <>
       {/* if the root isn't '/' then display the Header */}
-      {!isRoot && <Header />}
+      {/* {!isRoot && <Header />} */}
       <Outlet />
     </>
   );

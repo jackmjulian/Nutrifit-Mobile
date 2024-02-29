@@ -21,6 +21,7 @@ import CalorieTracker from '../components/CalorieTracker';
 import DeleteItemPopUp from '../components/DeleteItemPopUp';
 import UpdateUserMealsModal from '../components/UpdateUserMealsModal';
 import ButtonLoader from '../components/ButtonLoader';
+import Header from '../components/Header';
 
 const mealImages = [
   preworkoutCard,
@@ -82,6 +83,9 @@ const NutritionScreen = () => {
 
   return (
     <>
+      <Container>
+        <Header />
+      </Container>
       <Container className='mt-2 mb-2 d-flex justify-content-center align-items-center'>
         <DatePicker
           selected={startdate}
@@ -109,9 +113,10 @@ const NutritionScreen = () => {
               <Carousel.Item key={meal._id}>
                 <Card className='text-white nutrition-card bg-dark '>
                   <Card.Img
+                    as='img'
                     variant='top'
                     src={mealImages[index % mealImages.length]}
-                    style={{ width: '385px', height: '256px' }} // Set width and height here
+                    style={{ width: '100%', height: '40vh', objectFit: 'cover'}}
                   />
                   <Card.Body className='bg-none'>
                     <h1 className='nutrition-overlay-text'>{meal.meal_name}</h1>

@@ -21,6 +21,7 @@ body {
   width: 40%;
   display: block;
   margin: 0 auto; /* This centers the image horizontally */
+  height: 10vh;
 }
 
 .form-group-sign {
@@ -81,13 +82,19 @@ body {
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
 }
 
+.meal-bg-card {
+  width: 100%;
+  height: 40vh;
+  background-size: cover;
+}
+
 /* * fix dashboard navbar to the bottom of the screen * */
 
 .dashboard-nav {
   position: fixed;
   bottom: 0;
   width: 100%;
-  height: 15vh;
+  height: 10vh;
 }
 
 /* Adjust font size for all Nav.Link elements */

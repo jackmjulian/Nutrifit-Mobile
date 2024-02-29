@@ -16,6 +16,7 @@ import { useAddSetToExerciseMutation } from '../slices/exerciseApiSlice';
 import { useCreateSetMutation } from '../slices/setApiSlice';
 import { MdDeleteOutline } from 'react-icons/md';
 import { HiDotsHorizontal } from 'react-icons/hi';
+import Header from '../components/Header';
 
 const CreateWorkoutScreen = () => {
   // Initialize useNavigate
@@ -300,171 +301,176 @@ const CreateWorkoutScreen = () => {
   };
 
   return (
-    <Container className='bg-none text-light p-4'>
-      <Form
-      // onSubmit={submitWorkoutHandler}
-      >
-        <h1 className='nutrition-overlay-text'>
-          {repeatWorkoutData ? 'Repeat Workout' : 'Create Workout'}
-        </h1>
-        <Card className='bg-dark text-light p-2 mb-2'>
-          <Form.Group controlId='workoutName' className='d-flex'>
-            <Form.Control
-              type='text'
-              name='workoutName'
-              placeholder='Name'
-              className='form-group-create-food bg-dark text-light no-outline'
-              value={workoutName}
-              onChange={(e) => setWorkoutName(e.target.value)} // Update the workout name state when the field changes.
-            />
-            <Button
-              variant='outline-success'
-              type='submit'
-              className='no-outline'
-              onClick={submitWorkoutHandler}
-            >
-              {isCreatingWorkout ||
-              isAddingExerciseToWorkout ||
-              isAddingSetToExercise ||
-              isCreatingSet ? (
-                <ButtonLoader />
-              ) : (
-                'Save'
-              )}
-            </Button>
-          </Form.Group>
-        </Card>
-
-        {/* //! Map through each of the exercise cards added by user */}
-
-        {exercises.map((exercise, exerciseIndex) => (
-          <Card className='bg-dark text-light px-3 mb-2' key={exerciseIndex}>
-            {isWorkoutLoading ? <Loader /> : null}
-            <Row>
-              <Form.Group
-                id='exerciseName'
-                className='d-flex align-items-center bottom-line justify-content-between'
+    <>
+      <Container>
+        <Header />
+      </Container>
+      <Container className='bg-none text-light p-4'>
+        <Form
+        // onSubmit={submitWorkoutHandler}
+        >
+          <h1 className='nutrition-overlay-text'>
+            {repeatWorkoutData ? 'Repeat Workout' : 'Create Workout'}
+          </h1>
+          <Card className='bg-dark text-light p-2 mb-2'>
+            <Form.Group controlId='workoutName' className='d-flex'>
+              <Form.Control
+                type='text'
+                name='workoutName'
+                placeholder='Name'
+                className='form-group-create-food bg-dark text-light no-outline'
+                value={workoutName}
+                onChange={(e) => setWorkoutName(e.target.value)} // Update the workout name state when the field changes.
+              />
+              <Button
+                variant='outline-success'
+                type='submit'
+                className='no-outline'
+                onClick={submitWorkoutHandler}
               >
-                <Form.Control
-                  as='select'
-                  name={`exerciseName`}
-                  value={exercise.exercise_name || ''} // Set the value to an empty string if exercise_name is falsy
-                  className='form-group-create-workout bg-dark text-light no-outline w-75'
-                  onClick={() => setSelectExerciseModalShow(true)}
-                  onChange={handleFieldChange(
-                    exerciseIndex,
-                    null,
-                    'exercise_name'
-                  )} // Use the helper function to handle changes in the field.
-                >
-                  <option>
-                    {exercise.exercise_name
-                      ? exercise.exercise_name
-                      : 'Select Exercise'}
-                  </option>
-                </Form.Control>
-                <HiDotsHorizontal
-                  className='text-end'
-                  onClick={() => handleDeleteExercise(exerciseIndex)}
-                  exercise={exercise}
-                />
-              </Form.Group>
-            </Row>
+                {isCreatingWorkout ||
+                isAddingExerciseToWorkout ||
+                isAddingSetToExercise ||
+                isCreatingSet ? (
+                  <ButtonLoader />
+                ) : (
+                  'Save'
+                )}
+              </Button>
+            </Form.Group>
+          </Card>
 
-            {/* Map through each of the sets added by user */}
+          {/* //! Map through each of the exercise cards added by user */}
 
-            {exercise.sets.map((set, setIndex) => (
-              <Row key={setIndex}>
+          {exercises.map((exercise, exerciseIndex) => (
+            <Card className='bg-dark text-light px-3 mb-2' key={exerciseIndex}>
+              {isWorkoutLoading ? <Loader /> : null}
+              <Row>
                 <Form.Group
-                  id='exerciseSets'
-                  className='d-flex align-items-center bottom-line'
+                  id='exerciseName'
+                  className='d-flex align-items-center bottom-line justify-content-between'
                 >
                   <Form.Control
-                    type='text'
-                    name={`weight`}
-                    placeholder='Weight'
-                    value={set.set_weight}
-                    className='form-group-create-workout bg-dark text-light no-outline w-25 smaller-text'
+                    as='select'
+                    name={`exerciseName`}
+                    value={exercise.exercise_name || ''} // Set the value to an empty string if exercise_name is falsy
+                    className='form-group-create-workout bg-dark text-light no-outline w-75'
+                    onClick={() => setSelectExerciseModalShow(true)}
                     onChange={handleFieldChange(
                       exerciseIndex,
-                      setIndex,
-                      'set_weight'
+                      null,
+                      'exercise_name'
                     )} // Use the helper function to handle changes in the field.
+                  >
+                    <option>
+                      {exercise.exercise_name
+                        ? exercise.exercise_name
+                        : 'Select Exercise'}
+                    </option>
+                  </Form.Control>
+                  <HiDotsHorizontal
+                    className='text-end'
+                    onClick={() => handleDeleteExercise(exerciseIndex)}
+                    exercise={exercise}
                   />
-                  <Form.Control
-                    type='text'
-                    name='reps'
-                    placeholder='Reps'
-                    className='form-group-create-workout bg-dark text-light no-outline w-25 smaller-text'
-                    value={set.set_reps}
-                    onChange={handleFieldChange(
-                      exerciseIndex,
-                      setIndex,
-                      'set_reps'
-                    )} // Use the helper function to handle changes in the field.
-                  />
-                  <Form.Control
-                    type='text'
-                    name={`notes`}
-                    placeholder='Notes'
-                    value={set.set_notes}
-                    className='form-group-create-workout bg-dark text-light no-outline smaller-text w-40'
-                    onChange={handleFieldChange(
-                      exerciseIndex,
-                      setIndex,
-                      'set_notes'
-                    )} // Use the helper function to handle changes in the field.
-                  />
-                  <Col className='d-flex align-items-center justify-content-center'>
-                    <MdDeleteOutline
-                      onClick={() => handleDeleteSet(exerciseIndex, setIndex)}
-                    />
-                  </Col>
                 </Form.Group>
               </Row>
-            ))}
-            {/* End of sets map */}
 
-            <Form.Group>
+              {/* Map through each of the sets added by user */}
+
+              {exercise.sets.map((set, setIndex) => (
+                <Row key={setIndex}>
+                  <Form.Group
+                    id='exerciseSets'
+                    className='d-flex align-items-center bottom-line'
+                  >
+                    <Form.Control
+                      type='text'
+                      name={`weight`}
+                      placeholder='Weight'
+                      value={set.set_weight}
+                      className='form-group-create-workout bg-dark text-light no-outline w-25 smaller-text'
+                      onChange={handleFieldChange(
+                        exerciseIndex,
+                        setIndex,
+                        'set_weight'
+                      )} // Use the helper function to handle changes in the field.
+                    />
+                    <Form.Control
+                      type='text'
+                      name='reps'
+                      placeholder='Reps'
+                      className='form-group-create-workout bg-dark text-light no-outline w-25 smaller-text'
+                      value={set.set_reps}
+                      onChange={handleFieldChange(
+                        exerciseIndex,
+                        setIndex,
+                        'set_reps'
+                      )} // Use the helper function to handle changes in the field.
+                    />
+                    <Form.Control
+                      type='text'
+                      name={`notes`}
+                      placeholder='Notes'
+                      value={set.set_notes}
+                      className='form-group-create-workout bg-dark text-light no-outline smaller-text w-40'
+                      onChange={handleFieldChange(
+                        exerciseIndex,
+                        setIndex,
+                        'set_notes'
+                      )} // Use the helper function to handle changes in the field.
+                    />
+                    <Col className='d-flex align-items-center justify-content-center'>
+                      <MdDeleteOutline
+                        onClick={() => handleDeleteSet(exerciseIndex, setIndex)}
+                      />
+                    </Col>
+                  </Form.Group>
+                </Row>
+              ))}
+              {/* End of sets map */}
+
+              <Form.Group>
+                <Button
+                  variant='outline-success'
+                  type='button'
+                  className='no-outline mt-2'
+                  onClick={() => handleAddSet(exerciseIndex)}
+                >
+                  Add Set
+                </Button>
+              </Form.Group>
+
+              <SelectExerciseModal
+                show={selectExerciseModalShow}
+                onHide={() => setSelectExerciseModalShow(false)}
+                exerciseData={exerciseData}
+                // onSelectExercise={getSelectedExercise}
+                onSelectExercise={(exercise) =>
+                  getSelectedExercise(exercise, exerciseIndex)
+                }
+                refetchExerciseData={refetchExerciseData}
+              />
+            </Card>
+          ))}
+
+          {/* //! End of exercise map */}
+
+          <Card className='bg-dark text-light px-3 mt-2'>
+            <Form.Group controlId='addExerciseButton'>
               <Button
                 variant='outline-success'
                 type='button'
-                className='no-outline mt-2'
-                onClick={() => handleAddSet(exerciseIndex)}
+                className='no-outline'
+                onClick={handleAddExercise}
               >
-                Add Set
+                Add Exercise
               </Button>
             </Form.Group>
-
-            <SelectExerciseModal
-              show={selectExerciseModalShow}
-              onHide={() => setSelectExerciseModalShow(false)}
-              exerciseData={exerciseData}
-              // onSelectExercise={getSelectedExercise}
-              onSelectExercise={(exercise) =>
-                getSelectedExercise(exercise, exerciseIndex)
-              }
-              refetchExerciseData={refetchExerciseData}
-            />
           </Card>
-        ))}
-
-        {/* //! End of exercise map */}
-
-        <Card className='bg-dark text-light px-3 mt-2'>
-          <Form.Group controlId='addExerciseButton'>
-            <Button
-              variant='outline-success'
-              type='button'
-              className='no-outline'
-              onClick={handleAddExercise}
-            >
-              Add Exercise
-            </Button>
-          </Form.Group>
-        </Card>
-      </Form>
-    </Container>
+        </Form>
+      </Container>
+    </>
   );
 };
 

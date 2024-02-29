@@ -12,6 +12,7 @@ import Loader from '../components/Loader';
 import LogNewWeightModal from '../components/LogNewWeightModal';
 import UpdateCalorieGoalModal from '../components/UpdateCalorieGoalModal';
 import UpdateUserProfileModal from '../components/UpdateUserProfileModal';
+import Header from '../components/Header';
 
 const UserDashboard = () => {
   // Get the user info from the state
@@ -93,6 +94,9 @@ const UserDashboard = () => {
 
   return (
     <>
+      <Container>
+        <Header />
+      </Container>
       {isLoading || isFetching ? (
         <Loader />
       ) : (

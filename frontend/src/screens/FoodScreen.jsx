@@ -7,6 +7,7 @@ import Message from '../components/Message';
 import SearchBar from '../components/SearchBar';
 import FoodModal from '../components/FoodModal';
 import CreateFoodModal from '../components/CreateFoodModal';
+import Header from '../components/Header';
 
 const FoodScreen = () => {
   const { data: foods, isLoading, isError } = useGetFoodsQuery();
@@ -63,61 +64,66 @@ const FoodScreen = () => {
   const foodsToDisplay = searchTerm ? searchResults : foods;
 
   return (
-    <Container className='bg-none text-light p-4'>
-      <h1 className='nutrition-overlay-text'>Add Food Below</h1>
-      <Row>
-        <Col>
-          {' '}
-          <SearchBar onSearch={handleSearch} />
-        </Col>
-      </Row>
-      {/* Static card */}
-      <Card className='bg-dark text-light mb-2'>
-        <Button
-          variant='outline-success'
-          type='submit'
-          onClick={() => handleCreateFoodModalClick()}
-        >
-          Create New Food Item
-        </Button>
-      </Card>
-      {isLoading ? (
-        <Loader />
-      ) : isError ? (
-        <Message variant='danger'>
-          {isError?.data?.message || isError.error}
-        </Message>
-      ) : (
-        foodsToDisplay.map((food) => (
-          <Card key={food._id} className='bg-dark text-light mb-2'>
-            <Card.Body
-              className='pt-1 pb-1'
-              onClick={() => handleModalClick(food)}
-            >
-              <Row>
-                <Col xs={8} className='text-truncate'>
-                  {food.food_name}
-                </Col>
-                <Col xs={4} className='text-end'>
-                  {food.food_calories}cal
-                </Col>
-              </Row>
-            </Card.Body>
-          </Card>
-        ))
-      )}
-      <FoodModal
-        show={modalShow}
-        onHide={() => setModalShow(false)}
-        food={selectedFood}
-        meal={mealId}
-        setSelectedFood={setSelectedFood} // Pass down the state to the modal
-      />
-      <CreateFoodModal
-        show={createFoodModalShow}
-        onHide={() => setCreateFoodModalShow(false)}
-      />
-    </Container>
+    <>
+      <Container>
+        <Header />
+      </Container>
+      <Container className='bg-none text-light p-4'>
+        <h1 className='nutrition-overlay-text'>Add Food Below</h1>
+        <Row>
+          <Col>
+            {' '}
+            <SearchBar onSearch={handleSearch} />
+          </Col>
+        </Row>
+        {/* Static card */}
+        <Card className='bg-dark text-light mb-2'>
+          <Button
+            variant='outline-success'
+            type='submit'
+            onClick={() => handleCreateFoodModalClick()}
+          >
+            Create New Food Item
+          </Button>
+        </Card>
+        {isLoading ? (
+          <Loader />
+        ) : isError ? (
+          <Message variant='danger'>
+            {isError?.data?.message || isError.error}
+          </Message>
+        ) : (
+          foodsToDisplay.map((food) => (
+            <Card key={food._id} className='bg-dark text-light mb-2'>
+              <Card.Body
+                className='pt-1 pb-1'
+                onClick={() => handleModalClick(food)}
+              >
+                <Row>
+                  <Col xs={8} className='text-truncate'>
+                    {food.food_name}
+                  </Col>
+                  <Col xs={4} className='text-end'>
+                    {food.food_calories}cal
+                  </Col>
+                </Row>
+              </Card.Body>
+            </Card>
+          ))
+        )}
+        <FoodModal
+          show={modalShow}
+          onHide={() => setModalShow(false)}
+          food={selectedFood}
+          meal={mealId}
+          setSelectedFood={setSelectedFood} // Pass down the state to the modal
+        />
+        <CreateFoodModal
+          show={createFoodModalShow}
+          onHide={() => setCreateFoodModalShow(false)}
+        />
+      </Container>
+    </>
   );
 };
 export default FoodScreen;
