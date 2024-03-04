@@ -4,9 +4,11 @@ import Modal from 'react-bootstrap/Modal';
 import ButtonLoader from './ButtonLoader';
 import AddItemPopUp from './AddItemPopUp';
 import { GrUpdate } from 'react-icons/gr';
+import { TiDelete } from 'react-icons/ti';
 import {
   useCreateNewMealMutation,
   useUpdateMealMutation,
+  useDeleteMealMutation,
 } from '../slices/mealsApiSlice';
 
 function UpdateUserMealsModal({ show, onHide, userMeals, refetchMeals }) {
@@ -25,6 +27,9 @@ function UpdateUserMealsModal({ show, onHide, userMeals, refetchMeals }) {
 
   // Update a meal
   const [updateMeal, { isLoading: isUpdatingMeal }] = useUpdateMealMutation();
+
+  // Delete a meal
+  const [deleteMeal, { isLoading: isDeletingMeal }] = useDeleteMealMutation();
 
   // Function to add a new meal
   const handleAddMealClick = async (e) => {
@@ -84,6 +89,26 @@ function UpdateUserMealsModal({ show, onHide, userMeals, refetchMeals }) {
     });
   };
 
+  const handleDeleteMealClick = async (mealId) => {
+    console.log('Delete Meal Clicked', mealId);
+
+    AddItemPopUp({
+      title: 'Delete Meal',
+      text: 'Are you sure you want to delete this meal?',
+      confirmCallback: async () => {
+        try {
+          await deleteMeal({ mealId });
+          console.log('Meal deleted successfully', mealId);
+
+          // Refetch meals
+          refetchMeals();
+        } catch (error) {
+          console.log('Error deleting meal:', error);
+        }
+      },
+    });
+  };
+
   return (
     <Modal show={show} onHide={onHide} size='xs' centered backdrop='static'>
       <Modal.Header className='bg-dark' closeVariant='white' closeButton>
@@ -120,14 +145,24 @@ function UpdateUserMealsModal({ show, onHide, userMeals, refetchMeals }) {
                     />
                   </Col>
                   <Col xs={2} className='text-center'>
-                    {updatingMealIndex === index && isUpdatingMeal ? (
-                      <ButtonLoader />
-                    ) : (
-                      <GrUpdate
-                        className='text-success'
-                        onClick={() => handleUpdateMealClick(meal, index)}
-                      />
-                    )}
+                    <div className='d-flex justify-content-between'>
+                      {updatingMealIndex === index && isUpdatingMeal ? (
+                        <ButtonLoader />
+                      ) : (
+                        <GrUpdate
+                          className='text-success'
+                          onClick={() => handleUpdateMealClick(meal, index)}
+                        />
+                      )}
+                      {isDeletingMeal ? (
+                        <ButtonLoader />
+                      ) : (
+                        <TiDelete
+                          className='text-danger'
+                          onClick={() => handleDeleteMealClick(meal._id)}
+                        />
+                      )}
+                    </div>
                   </Col>
                 </Row>
               </Form.Group>

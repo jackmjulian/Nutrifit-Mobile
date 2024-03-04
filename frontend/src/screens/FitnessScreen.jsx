@@ -11,7 +11,7 @@ import Header from '../components/Header';
 const FitnessScreen = () => {
   // Get workout data
   const { data: workouts, isLoading, isError } = useGetWorkoutsQuery();
-  console.log('workouts', workouts);
+  // console.log('workouts', workouts);
 
   // Initialize useNavigate
   const navigate = useNavigate();

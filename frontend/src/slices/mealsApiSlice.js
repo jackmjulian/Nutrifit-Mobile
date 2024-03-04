@@ -46,6 +46,12 @@ export const mealsApiSlice = apiSlice.injectEndpoints({
         body: mealName,
       }),
     }),
+    deleteMeal: builder.mutation({
+      query: ({ mealId }) => ({
+        url: `${MEALS_URL}/${mealId}`, // Concatenate mealId with the base URL
+        method: 'DELETE',
+      }),
+    }),
   }),
 });
 
@@ -56,4 +62,5 @@ export const {
   useDeleteFoodFromMealMutation,
   useCreateNewMealMutation,
   useUpdateMealMutation,
+  useDeleteMealMutation,
 } = mealsApiSlice;
