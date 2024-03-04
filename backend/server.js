@@ -61,8 +61,7 @@ if (process.env.NODE_ENV === 'production') {
     res.sendFile(path.resolve(__dirname, 'frontend', 'dist', 'index.html'));
   });
 } else {
-  // Serve API only for unmatched routes
-  app.get('*', (req, res) => {
+  app.get('/', (req, res) => {
     res.send('API is running...');
   });
 }
