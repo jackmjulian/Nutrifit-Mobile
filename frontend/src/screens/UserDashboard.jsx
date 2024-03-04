@@ -61,7 +61,11 @@ const UserDashboard = () => {
     });
 
     // Calculate remaining calories
-    remainingCalories = userInfo.calorie_goal - totalCalories;
+    // remainingCalories = userInfo.calorie_goal - totalCalories;
+    remainingCalories =
+      userInfo && userInfo.calorie_goal
+        ? userInfo.calorie_goal - totalCalories
+        : 0;
   }
 
   const [formData, setFormData] = useState({
