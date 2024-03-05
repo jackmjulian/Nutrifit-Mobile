@@ -45,9 +45,9 @@ export default defineConfig({
             purpose: 'image/svg',
           },
           {
-            src: '/images/logo-flavicon.svg',
+            src: '/images/favicon.ico',
             sizes: '512x512',
-            type: 'image/svg',
+            type: 'image/x-icon',
             purpose: 'any',
           },
         ],
