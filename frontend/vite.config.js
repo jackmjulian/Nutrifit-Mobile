@@ -6,7 +6,7 @@ import { VitePWA } from 'vite-plugin-pwa';
 
 const manifestForPlugin = {
   registerType: 'prompt',
-  includeAssests: ['favicon.ico', 'apple-touc-icon.png', 'masked-icon.svg'],
+  includedAssets: ['favicon.ico', 'apple-touch-icon.png', 'logo-flavicon.svg'],
   manifest: {
     name: 'Nutrifit-Mobile',
     short_name: 'nutrifit-Mobile',
@@ -35,7 +35,7 @@ const manifestForPlugin = {
         src: '/public/images/logo-flavicon.svg',
         sizes: '512x512',
         type: 'image/svg',
-        purpose: 'image/webp',
+        purpose: 'image/svg',
       },
       {
         src: '/public/images/logo-flavicon.svg',
