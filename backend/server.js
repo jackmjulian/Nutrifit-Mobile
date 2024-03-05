@@ -32,9 +32,9 @@ app.use(cookieParser());
 // app.use(cors());
 
 // Initial Route
-app.get('/', (req, res) => {
-  res.send('Server is ready');
-});
+// app.get('/', (req, res) => {
+//   res.send('Server is ready');
+// });
 
 // Route: /api/foods
 app.use('/api/foods', foodRoutes);
