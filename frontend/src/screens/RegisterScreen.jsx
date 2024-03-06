@@ -32,12 +32,30 @@ const RegisterScreen = () => {
   // get the redirect param from the URL
   const redirect = sp.get('redirect') || '/';
 
-  // Use Effect Here
+  useEffect(() => {
+    if (userInfo) {
+      console.log(userInfo);
+      navigate(redirect);
+    }
+  }, [navigate, redirect, userInfo]);
 
   // Submit handler for the form
   const submitHandler = async (e) => {
     e.preventDefault();
     console.log('Submit Handler');
+
+    // Check if the passwords match
+    if (password !== confirmPassword) {
+      toast.error('Passwords do not match');
+    } else {
+      try {
+        const res = await register({ name, email, password }).unwrap();
+        dispatch(setCredentials({ ...res }));
+        navigate(redirect);
+      } catch (error) {
+        console.log(error);
+      }
+    }
   };
 
   return (

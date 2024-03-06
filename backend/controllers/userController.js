@@ -1,5 +1,6 @@
 import asyncHandler from '../middleware/asyncHandler.js';
 import { User } from '../models/userModel.js';
+import { Meal } from '../models/foodModel.js';
 import generateToken from '../utils/generateToken.js';
 
 // @desc Login user & get token
@@ -52,7 +53,27 @@ const registerUser = asyncHandler(async (req, res) => {
     name,
     email,
     password,
+    calorie_goal: 2000,
   });
+
+  // If user is created, create a default meal set for the user
+  if (user) {
+    // Define an array of default meals
+    const defaultMeals = [
+      { meal_name: 'Breakfast', meal_foods: [] },
+      { meal_name: 'Lunch', meal_foods: [] },
+      { meal_name: 'Dinner', meal_foods: [] },
+      { meal_name: 'Snacks', meal_foods: [] },
+    ];
+
+    // Iterate over the default meals array and create meals for the user
+    for (const defaultMeal of defaultMeals) {
+      await Meal.create({
+        user: user._id,
+        ...defaultMeal,
+      });
+    }
+  }
 
   // If user is created, respond with user data
   if (user) {

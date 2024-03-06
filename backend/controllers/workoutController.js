@@ -9,6 +9,7 @@ import { Workout, Exercise } from '../models/workoutModel.js';
 //   const workouts = await Workout.find({}); // empty object returns all workouts
 //   res.status(200).json(workouts);
 // });
+
 // @desc    Fetch all workouts with matching exercises and sets
 // @route   GET /api/workouts
 // @access  Private

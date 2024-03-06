@@ -17,6 +17,7 @@ import Header from '../components/Header';
 const UserDashboard = () => {
   // Get the user info from the state
   const { id } = useParams();
+  // console.log(id);
 
   const {
     data: userInfo,
@@ -31,6 +32,8 @@ const UserDashboard = () => {
     isLoading: loadingMeals,
     isFetching: fettchingMeals,
   } = useGetMealsByUserQuery(id);
+
+  // console.log(userMeals);
 
   // Set Modal States
   const [showLogWeightModal, setShowLogWeightModal] = useState(false);
@@ -122,16 +125,25 @@ const UserDashboard = () => {
                 <Card.Body>
                   <h5>Bodyweight</h5>
                   <p>
-                    Current: {latestWeight || '0'}
-                    {userInfo.weight[0].weight_units}
+                    Current:{' '}
+                    {latestWeight !== Number.MAX_VALUE ? latestWeight : 'N/A'}
+                    {userInfo.weight.length > 0 &&
+                    userInfo.weight[0].weight_units
+                      ? userInfo.weight[0].weight_units
+                      : ''}
                   </p>
                   <p>
-                    Highest: {highestWeight || '0'}
-                    {userInfo.weight[0].weight_units}
+                    Highest: {highestWeight !== 0 ? highestWeight : 'N/A'}
+                    {userInfo.weight.length > 0 &&
+                    userInfo.weight[0].weight_units
+                      ? userInfo.weight[0].weight_units
+                      : ''}
                   </p>
                   <p>
-                    Lowest: {lowestWeight || '0'}
-                    {userInfo.weight[0].weight_units}
+                    Lowest:{' '}
+                    {lowestWeight !== Number.MAX_VALUE ? lowestWeight : 'N/A'}
+                    {userInfo.weight.length > 0 &&
+                      userInfo.weight[0].weight_units}
                   </p>
                 </Card.Body>
               </Card>

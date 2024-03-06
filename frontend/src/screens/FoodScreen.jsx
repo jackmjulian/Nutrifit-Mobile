@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import { Container, Card, Col, Row, Button } from 'react-bootstrap';
 import { useGetFoodsQuery } from '../slices/foodApiSlice';
 import Loader from '../components/Loader';
@@ -11,6 +12,8 @@ import Header from '../components/Header';
 
 const FoodScreen = () => {
   const { data: foods, isLoading, isError } = useGetFoodsQuery();
+  const { userInfo } = useSelector((state) => state.auth);
+
   // console.log('Food Page', foods);
 
   // Get the search term from the URL
@@ -63,6 +66,11 @@ const FoodScreen = () => {
   // If there is a search term, display the search results, otherwise display all foods
   const foodsToDisplay = searchTerm ? searchResults : foods;
 
+  // Filter foods that belong to the logged-in user if foods are available
+  const userFoods =
+    foodsToDisplay &&
+    foodsToDisplay.filter((food) => food.user === userInfo._id);
+
   return (
     <>
       <Container>
@@ -93,7 +101,7 @@ const FoodScreen = () => {
             {isError?.data?.message || isError.error}
           </Message>
         ) : (
-          foodsToDisplay.map((food) => (
+          userFoods.map((food) => (
             <Card key={food._id} className='bg-dark text-light mb-2'>
               <Card.Body
                 className='pt-1 pb-1'

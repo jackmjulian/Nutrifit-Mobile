@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { Container, Card, Col, Row, Button } from 'react-bootstrap';
 import Loader from '../components/Loader';
@@ -11,7 +12,10 @@ import Header from '../components/Header';
 const FitnessScreen = () => {
   // Get workout data
   const { data: workouts, isLoading, isError } = useGetWorkoutsQuery();
-  // console.log('workouts', workouts);
+  // return the auth state from userInfo in the redux store
+  const { userInfo } = useSelector((state) => state.auth);
+  console.log('userInfo', userInfo._id);
+  console.log('workout user', workouts?.[0]?.user);
 
   // Initialize useNavigate
   const navigate = useNavigate();
@@ -36,10 +40,18 @@ const FitnessScreen = () => {
   // If there is a search term, display the search results, otherwise display all workouts
   const workoutsToDisplay = searchTerm ? searchResults : workouts;
 
+  // Filter workouts that belong to the logged-in user if workouts are available
+  const userWorkouts =
+    (workoutsToDisplay &&
+      workoutsToDisplay.filter((workout) => workout.user === userInfo._id)) ||
+    [];
+
+  console.log('userWorkouts', userWorkouts);
+
   // Handle workout click
   const handleWorkoutClick = (workoutInstance) => {
     navigate(`/fitness/repeat-workout/${workoutInstance}`);
-    console.log(workoutInstance);
+    // console.log(workoutInstance);
   };
 
   return (
@@ -48,7 +60,9 @@ const FitnessScreen = () => {
         <Header />
       </Container>
       <Container className='bg-none text-light p-4'>
-        <h1 className='nutrition-overlay-text'>Previous Workouts</h1>
+        <h1 className='nutrition-overlay-text'>
+          {userWorkouts.length ? 'Previous Workouts' : 'Create New Workout'}
+        </h1>
         <Row>
           <Col>
             {' '}
@@ -72,7 +86,7 @@ const FitnessScreen = () => {
           </Message>
         ) : (
           // map through all the workout data
-          workoutsToDisplay.map((workout) => (
+          userWorkouts.map((workout) => (
             <Card
               key={workout.workout_instance_id}
               className='bg-dark text-light mb-2'

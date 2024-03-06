@@ -36,7 +36,7 @@ router
 // Route for getting user by ID, deleting user, & updating user
 router
   .route('/:id')
-  .get(protect, admin, getUserByID)
+  .get(protect, getUserByID)
   .delete(protect, admin, deleteUser);
 
 // Route for logging weight
