@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Button, Form, Row, Col } from 'react-bootstrap';
+import { Button, Form, Row, Col, Image } from 'react-bootstrap';
 import Modal from 'react-bootstrap/Modal';
 import ButtonLoader from './ButtonLoader';
 import AddItemPopUp from './AddItemPopUp';
@@ -19,7 +19,13 @@ function UpdateUserMealsModal({ show, onHide, userMeals, refetchMeals }) {
 
   // Set state for the meal name field
   const [mealName, setMealName] = useState('');
+  const [mealImage, setMealImage] = useState('');
   const [updatingMealIndex, setUpdatingMealIndex] = useState(null);
+
+  // Set state for the meal image input
+  const [fileInputState, setFileInputState] = useState('');
+  const [selectedFile, setSelectedFile] = useState();
+  const [previewSource, setPreviewSource] = useState('');
 
   // Create a new meal
   const [createNewMeal, { isLoading: isCreatingMeal }] =
@@ -31,24 +37,65 @@ function UpdateUserMealsModal({ show, onHide, userMeals, refetchMeals }) {
   // Delete a meal
   const [deleteMeal, { isLoading: isDeletingMeal }] = useDeleteMealMutation();
 
+  // Function to handle file input change
+  const handleFileInputChange = (e) => {
+    // console.log(e.target.files);
+    const file = e.target.files[0];
+    setSelectedFile(file);
+    previewFile(file);
+  };
+
+  // Function to preview the file
+  const previewFile = (file) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file); // convert the image to a string
+    reader.onloadend = () => {
+      setPreviewSource(reader.result); // set preview as the result from the reader
+    };
+  };
+
   // Function to add a new meal
   const handleAddMealClick = async (e) => {
     e.preventDefault();
+    console.log('selected file:', selectedFile);
     console.log('Add New Meal Clicked', formData.meal_name);
 
     AddItemPopUp({
       title: 'Add New Meal',
       text: 'Are you sure you want to create this meal?',
       confirmCallback: async () => {
+        const data = new FormData();
+        data.append('file', selectedFile);
+        data.append('upload_preset', 'mm029ei1');
+        data.append('cloud_name', 'dk4pzv3xg');
+        data.append('folder', 'nutrifitmobile');
+
         try {
-          await createNewMeal({ mealName: { meal_name: mealName } });
-          console.log('Meal created successfully', mealName);
+          const cloudinaryResponse = await fetch(
+            'https://api.cloudinary.com/v1_1/dk4pzv3xg/image/upload',
+            {
+              method: 'POST',
+              body: data,
+            }
+          );
+
+          const cloudinaryData = await cloudinaryResponse.json();
+          console.log(cloudinaryData);
+          console.log(cloudinaryData.secure_url);
+
+          await createNewMeal({
+            data: {
+              meal_name: mealName,
+              meal_image: cloudinaryData.secure_url,
+            },
+          });
 
           // Refetch meals
           refetchMeals();
 
           // Reset the state
           setMealName('');
+          setPreviewSource('');
 
           setAddMealForm(false);
         } catch (error) {
@@ -118,18 +165,35 @@ function UpdateUserMealsModal({ show, onHide, userMeals, refetchMeals }) {
       </Modal.Header>
       <Modal.Body className='bg-dark '>
         {addMealForm ? (
-          <Form className='bg-dark text-light'>
-            <Form.Group controlId='addNewMeal' className='mb-2'>
-              <Form.Control
-                type='text'
-                name='meal_name'
-                placeholder='New Meal Name'
-                value={mealName}
-                onChange={(e) => setMealName(e.target.value)}
-                className='form-group-create-food bg-dark text-light'
-              />
-            </Form.Group>
-          </Form>
+          <>
+            <Form className='bg-dark text-light'>
+              <Form.Group controlId='addNewMeal' className='mb-2'>
+                <Form.Control
+                  type='text'
+                  name='meal_name'
+                  placeholder='New Meal Name'
+                  value={mealName}
+                  onChange={(e) => setMealName(e.target.value)}
+                  className='form-group-create-food bg-dark text-light'
+                />
+              </Form.Group>
+              <Form.Group controlId='addNewImage' className='mb-2'>
+                <Form.Control
+                  type='file'
+                  name='meal_image'
+                  placeholder='New Meal Image'
+                  // value={fileInputState}
+                  onChange={handleFileInputChange}
+                  className='form-group-create-food bg-dark text-light'
+                />
+              </Form.Group>
+            </Form>
+
+            {/* //! Show Image Preview  */}
+            {previewSource && (
+              <Image src={previewSource} fluid style={{ height: '200px' }} />
+            )}
+          </>
         ) : (
           <Form className='bg-dark text-light'>
             {userMeals.map((meal, index) => (

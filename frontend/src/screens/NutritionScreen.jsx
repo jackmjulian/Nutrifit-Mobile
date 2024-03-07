@@ -115,8 +115,16 @@ const NutritionScreen = () => {
                   <Card.Img
                     as='img'
                     variant='top'
-                    src={mealImages[index % mealImages.length]}
-                    style={{ width: '100%', height: '40vh', objectFit: 'cover'}}
+                    src={
+                      meal.meal_image
+                        ? meal.meal_image
+                        : mealImages[index % mealImages.length]
+                    }
+                    style={{
+                      width: '100%',
+                      height: '40vh',
+                      objectFit: 'cover',
+                    }}
                   />
                   <Card.Body className='bg-none'>
                     <h1 className='nutrition-overlay-text'>{meal.meal_name}</h1>

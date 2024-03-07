@@ -37,12 +37,14 @@ const getMealById = asyncHandler(async (req, res) => {
 // @route   POST /api/meals
 // @access  Private
 const createMeal = asyncHandler(async (req, res) => {
-  const { meal_name, meal_foods } = req.body;
+  const { meal_name, meal_image, meal_foods } = req.body;
   const meal = new Meal({
     user: req.user._id,
     meal_name,
+    meal_image,
     meal_foods,
   });
+  // console.log('backend meal ', meal);
   const createdMeal = await meal.save();
   res.status(201).json(createdMeal);
 });

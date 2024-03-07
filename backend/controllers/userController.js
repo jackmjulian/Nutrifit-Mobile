@@ -60,10 +60,30 @@ const registerUser = asyncHandler(async (req, res) => {
   if (user) {
     // Define an array of default meals
     const defaultMeals = [
-      { meal_name: 'Breakfast', meal_foods: [] },
-      { meal_name: 'Lunch', meal_foods: [] },
-      { meal_name: 'Dinner', meal_foods: [] },
-      { meal_name: 'Snacks', meal_foods: [] },
+      {
+        meal_name: 'Breakfast',
+        meal_image:
+          'https://res.cloudinary.com/dk4pzv3xg/image/upload/v1709815316/nutrifitmobile/d9arvruj4hotyobjags9.jpg',
+        meal_foods: [],
+      },
+      {
+        meal_name: 'Lunch',
+        meal_image:
+          'https://res.cloudinary.com/dk4pzv3xg/image/upload/v1709815417/nutrifitmobile/hr8dialrrzdjmwsotnts.jpg',
+        meal_foods: [],
+      },
+      {
+        meal_name: 'Dinner',
+        meal_image:
+          'https://res.cloudinary.com/dk4pzv3xg/image/upload/v1709815448/nutrifitmobile/m62ratsytwfsdxtw6fzn.jpg',
+        meal_foods: [],
+      },
+      {
+        meal_name: 'Snacks',
+        meal_image:
+          'https://res.cloudinary.com/dk4pzv3xg/image/upload/v1709815488/nutrifitmobile/t9uefrkm3mqaruzaj0j5.jpg',
+        meal_foods: [],
+      },
     ];
 
     // Iterate over the default meals array and create meals for the user
