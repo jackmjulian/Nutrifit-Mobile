@@ -19,7 +19,7 @@ const WelcomeScreen = () => {
   }, [userInfo, navigate]);
 
   const backgroundStyle = {
-    backgroundImage: `url(${Background})`,
+    backgroundImage: `url(https://res.cloudinary.com/dk4pzv3xg/image/upload/v1709990482/nutrifitmobile/rv9cjeh57ncqafwkn31v.png)`,
     backgroundSize: 'cover',
     backgroundPosition: 'right',
     margin: 0,

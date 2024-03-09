@@ -10,13 +10,13 @@ const DashBoardScreen = () => {
   return (
     <>
       <Container className='vh-100'>
-      <Header />
+        <Header />
         <Row className='thumbnail-main'>
           <Col xs={12} className='thumbnail-container'>
             <Link to='/nutrition' className='thumbnail-link'>
               <div className='thumbnail-wrapper'>
                 <img
-                  src={nutritionThumbnail}
+                  src='https://res.cloudinary.com/dk4pzv3xg/image/upload/v1709990731/nutrifitmobile/i4efq6fajvywmakemagv.png'
                   alt='nutrition-thumbnail'
                   className='fluid thumbnail'
                 />
@@ -28,7 +28,7 @@ const DashBoardScreen = () => {
             <Link to='/fitness' className='thumbnail-link'>
               <div className='thumbnail-wrapper'>
                 <img
-                  src={fitnessThumbnail}
+                  src='https://res.cloudinary.com/dk4pzv3xg/image/upload/v1709990939/nutrifitmobile/l1zl5muh5kjpddtjmnjz.png'
                   alt='fitness-thumbnail'
                   className='fluid thumbnail'
                 />

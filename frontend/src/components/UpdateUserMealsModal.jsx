@@ -22,14 +22,16 @@ function UpdateUserMealsModal({ show, onHide, userMeals, refetchMeals }) {
   const [mealImage, setMealImage] = useState('');
   const [updatingMealIndex, setUpdatingMealIndex] = useState(null);
 
+  // creating meal loading state
+  const [isCreatingMeal, setIsCreatingMeal] = useState(false);
+
   // Set state for the meal image input
   const [fileInputState, setFileInputState] = useState('');
   const [selectedFile, setSelectedFile] = useState();
   const [previewSource, setPreviewSource] = useState('');
 
   // Create a new meal
-  const [createNewMeal, { isLoading: isCreatingMeal }] =
-    useCreateNewMealMutation();
+  const [createNewMeal] = useCreateNewMealMutation();
 
   // Update a meal
   const [updateMeal, { isLoading: isUpdatingMeal }] = useUpdateMealMutation();
@@ -71,6 +73,8 @@ function UpdateUserMealsModal({ show, onHide, userMeals, refetchMeals }) {
         data.append('folder', 'nutrifitmobile');
 
         try {
+          setIsCreatingMeal(true);
+
           const cloudinaryResponse = await fetch(
             'https://api.cloudinary.com/v1_1/dk4pzv3xg/image/upload',
             {
@@ -98,6 +102,8 @@ function UpdateUserMealsModal({ show, onHide, userMeals, refetchMeals }) {
           setPreviewSource('');
 
           setAddMealForm(false);
+
+          setIsCreatingMeal(false);
         } catch (error) {
           console.log('Error creating new meal:', error);
         }
