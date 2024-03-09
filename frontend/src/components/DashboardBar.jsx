@@ -36,7 +36,7 @@ const DashboardBar = () => {
   return (
     <>
       <Navbar variant='dark' className='dashboard-nav'>
-        <Container className='d-flex justify-content-evenly'>
+        <Container className='d-flex justify-content-evenly mb-4'>
           <LinkContainer
             to={`/dashboard/${userInfo._id}`}
             // onClick={() => console.log('userDashboard')}

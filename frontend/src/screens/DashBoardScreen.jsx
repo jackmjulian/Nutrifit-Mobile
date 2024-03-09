@@ -18,7 +18,7 @@ const DashBoardScreen = () => {
                 <img
                   src='https://res.cloudinary.com/dk4pzv3xg/image/upload/v1709990731/nutrifitmobile/i4efq6fajvywmakemagv.png'
                   alt='nutrition-thumbnail'
-                  className='fluid thumbnail'
+                  className='fluid thumbnail mb-4'
                 />
                 <h1 className='overlay-text'>Nutrition</h1>
               </div>
@@ -30,7 +30,7 @@ const DashBoardScreen = () => {
                 <img
                   src='https://res.cloudinary.com/dk4pzv3xg/image/upload/v1709990939/nutrifitmobile/l1zl5muh5kjpddtjmnjz.png'
                   alt='fitness-thumbnail'
-                  className='fluid thumbnail'
+                  className='fluid thumbnail mb-4'
                 />
                 <h1 className='overlay-text'>Fitness</h1>
               </div>
