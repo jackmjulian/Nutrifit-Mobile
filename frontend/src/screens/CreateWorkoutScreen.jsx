@@ -61,7 +61,7 @@ const CreateWorkoutScreen = () => {
   const [selectExerciseModalShow, setSelectExerciseModalShow] = useState(false);
 
   // Selected exercise state for the modal
-  const [selectedExercise, setSelectedExercise] = useState(null);
+  const [selectedExerciseIndex, setSelectedExerciseIndex] = useState(null);
 
   // Get create workout mutation
   const [createWorkout, { isLoading: isCreatingWorkout }] =
@@ -300,6 +300,12 @@ const CreateWorkoutScreen = () => {
     });
   };
 
+  // Function to open the modal with the selected exercise index
+  const openSelectExerciseModal = (exerciseIndex) => {
+    setSelectedExerciseIndex(exerciseIndex);
+    setSelectExerciseModalShow(true);
+  };
+
   return (
     <>
       <Container>
@@ -355,7 +361,7 @@ const CreateWorkoutScreen = () => {
                     name={`exerciseName`}
                     value={exercise.exercise_name || ''} // Set the value to an empty string if exercise_name is falsy
                     className='form-group-create-workout bg-dark text-light no-outline w-75'
-                    onClick={() => setSelectExerciseModalShow(true)}
+                    onClick={() => openSelectExerciseModal(exerciseIndex)}
                     onChange={handleFieldChange(
                       exerciseIndex,
                       null,
@@ -440,19 +446,18 @@ const CreateWorkoutScreen = () => {
                   Add Set
                 </Button>
               </Form.Group>
-
-              <SelectExerciseModal
-                show={selectExerciseModalShow}
-                onHide={() => setSelectExerciseModalShow(false)}
-                exerciseData={exerciseData}
-                // onSelectExercise={getSelectedExercise}
-                onSelectExercise={(exercise) =>
-                  getSelectedExercise(exercise, exerciseIndex)
-                }
-                refetchExerciseData={refetchExerciseData}
-              />
             </Card>
           ))}
+
+          <SelectExerciseModal
+            show={selectExerciseModalShow}
+            onHide={() => setSelectExerciseModalShow(false)}
+            exerciseData={exerciseData}
+            onSelectExercise={(exercise) =>
+              getSelectedExercise(exercise, selectedExerciseIndex)
+            }
+            refetchExerciseData={refetchExerciseData}
+          />
 
           {/* //! End of exercise map */}
 
