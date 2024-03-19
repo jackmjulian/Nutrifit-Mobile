@@ -176,7 +176,7 @@ function FoodModal({ show, onHide, food, meal, setSelectedFood }) {
           {food ? food.food_name : 'No food selected'}
         </Modal.Title>
       </Modal.Header>
-      <Modal.Body className='bg-dark '>
+      <Modal.Body className='bg-dark pie-chart-container'>
         <PieChartWithCenterLabel
           data={chartData}
           label={food ? food.food_calories : 0}

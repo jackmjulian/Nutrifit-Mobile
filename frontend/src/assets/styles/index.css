@@ -150,3 +150,7 @@ body {
 .smaller-text {
   font-size: 0.7em; /* You can adjust the font size as needed */
 }
+
+.pie-chart-container text {
+  fill: white !important; /* Set label text color to white */
+}

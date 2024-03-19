@@ -189,7 +189,7 @@ const UserDashboard = () => {
                 <Card.Body>
                   <h5>Daily Macros</h5>
                 </Card.Body>
-                <Card.Body className='d-flex'>
+                <Card.Body className='d-flex pie-chart-container'>
                   <PieChart
                     series={[
                       {
