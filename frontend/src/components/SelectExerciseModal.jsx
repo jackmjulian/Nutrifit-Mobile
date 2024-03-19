@@ -44,12 +44,12 @@ function SelectExerciseModal({
     : [];
 
   // Function to handle category filter button click
-  const handleCategoryFilter = (category) => {
-    // Toggle category selection
-    setSelectedCategory((prevCategory) =>
-      prevCategory === category ? null : category
-    );
-  };
+  // const handleCategoryFilter = (category) => {
+  //   // Toggle category selection
+  //   setSelectedCategory((prevCategory) =>
+  //     prevCategory === category ? null : category
+  //   );
+  // };
 
   // Function to handle exercise selection
   const handleExerciseSelection = (exercise, exerciseIndex) => {
@@ -122,7 +122,7 @@ function SelectExerciseModal({
         <Row>
           {/* Render filter buttons for unique exercise categories */}
           {!addExerciseMode && exerciseData && (
-            <Dropdown onSelect={handleCategoryFilter} className='mb-2'>
+            <Dropdown onSelect={setSelectedCategory} className='mb-2'>
               <Dropdown.Toggle variant='outline-success' className='w-100'>
                 Filter Categories
               </Dropdown.Toggle>
