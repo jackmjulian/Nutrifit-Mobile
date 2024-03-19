@@ -189,31 +189,33 @@ const UserDashboard = () => {
                 <Card.Body>
                   <h5>Daily Macros</h5>
                 </Card.Body>
-                <PieChart
-                  series={[
-                    {
-                      data: [
-                        {
-                          id: 0,
-                          value: parseFloat(totalProtein),
-                          label: `P: ${totalProtein.toFixed(1)}g`,
-                        },
-                        {
-                          id: 1,
-                          value: parseFloat(totalCarbs),
-                          label: `C: ${totalCarbs.toFixed(1)}g`,
-                        },
-                        {
-                          id: 2,
-                          value: parseFloat(totalFat),
-                          label: `F: ${totalFat.toFixed(1)}g`,
-                        },
-                      ],
-                    },
-                  ]}
-                  width={400}
-                  height={200}
-                />
+                <Card.Body className='d-flex'>
+                  <PieChart
+                    series={[
+                      {
+                        data: [
+                          {
+                            id: 0,
+                            value: parseFloat(totalProtein),
+                            label: `P: ${totalProtein.toFixed(1)}g`,
+                          },
+                          {
+                            id: 1,
+                            value: parseFloat(totalCarbs),
+                            label: `C: ${totalCarbs.toFixed(1)}g`,
+                          },
+                          {
+                            id: 2,
+                            value: parseFloat(totalFat),
+                            label: `F: ${totalFat.toFixed(1)}g`,
+                          },
+                        ],
+                      },
+                    ]}
+                    width={400}
+                    height={200}
+                  />
+                </Card.Body>
               </Card>
             </Col>
           </Row>

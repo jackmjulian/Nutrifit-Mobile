@@ -46,7 +46,13 @@ const FitnessScreen = () => {
       workoutsToDisplay.filter((workout) => workout.user === userInfo._id)) ||
     [];
 
-  console.log('userWorkouts', userWorkouts);
+  // Sort userWorkouts based on createdAt timestamp in descending order
+  const sortedWorkouts = userWorkouts.sort(
+    (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+  );
+
+  // console.log('userWorkouts', userWorkouts);
+  console.log('sorted workouts', sortedWorkouts);
 
   // Handle workout click
   const handleWorkoutClick = (workoutInstance) => {
